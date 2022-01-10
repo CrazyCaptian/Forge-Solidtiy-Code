@@ -333,13 +333,21 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 		    _startNewMiningEpoch();
 
         	uint diff = block.timestamp - previousBlockTime;
-            uint x=0;
-	    		while(diff <= (targetTime * x).div(30000)){
+            uint x=10;
+	    		while(diff <= (targetTime * x).div(88)){
 				x++;
 	    		}
-	    	
+            uint ratio = x * 100 / 88;
+            uint totalOwed = 0;
+	    	if( ratio >= 150){
+                totalOwed = (reward_amount * 3* x).div(88 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+            }else {
+		        totalOwed = (reward_amount * x).div(88 );
+	    	}
 
-            uint reward = (x * reward_amount).div(20000);
+    
+
+            uint reward = totalOwed;
 	
 	    	balances[mintTo] = balances[mintTo].add(reward);
 	        balances[AddressLPReward] = balances[AddressLPReward].add((reward).div(2));
@@ -357,7 +365,7 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 // REPALCE WITH LINE BELOW in production
 //function mintTokensArrayTo(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
 function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
-		uint xx = 4;
+		uint xx = 10;
         uint diff = block.timestamp - previousBlockTime;
 		while(diff <= (targetTime * xx).div(88)){
 			xx++;
@@ -388,16 +396,16 @@ if(epochCount % (2**(x+1)) == 0){
     {
         uint256 totalOwed = 0;
 
-		uint256 ratio = xx/88;
+		uint256 ratio = 100 *xx/88;
 		if( (x+1) % 3 == 0 && x != 0){
-		if( ratio > 1){
+		if( ratio >= 150){
             totalOwed = (3 * TotalOwned * xx).divRound(88 * 2500 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
         }else {
 		totalOwed = (totalOwed * xx).divRound(88 * 2500);
 		}
 	}else
     {
-        if( ratio > 1){
+        if( ratio >= 150){
             totalOwed = (3 * TotalOwned * xx).div(88 * 2500 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
         }else {
 		totalOwed = (totalOwed * xx).div(88 * 2500);
