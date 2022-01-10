@@ -339,7 +339,9 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 	    		}
             uint ratio = x * 100 / 88;
             uint totalOwed = 0;
-	    	if( ratio >= 150){
+	    	if( ratio >= 200){
+                totalOwed = (reward_amount * 3* x).div(88);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+            }else ( ratio >= 150){
                 totalOwed = (reward_amount * 3* x).div(88 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else {
 		        totalOwed = (reward_amount * x).div(88 );
