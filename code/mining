@@ -333,15 +333,14 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 		    _startNewMiningEpoch();
 
         	uint diff = block.timestamp - previousBlockTime;
-	    	uint x = 4;
+	    	uint x = 1;
 	    	if(diff  > targetTime)
 	    	{
-	    		for(x = 4; x< 10; x++){
-	    		if(diff <= (targetTime * x).div(3)){
-	    		 	break;
+	    		while((diff <= (targetTime * x).div(30000)){
+				x++;
 	    		}}
 	    	}
-            uint reward = (x * reward_amount).div(2);
+            uint reward = (x * reward_amount).div(20000);
 	
 	    	balances[mintTo] = balances[mintTo].add(reward);
 	        balances[AddressLPReward] = balances[AddressLPReward].add((reward).div(2));
@@ -361,13 +360,10 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
 		uint xx = 4;
         uint diff = block.timestamp - previousBlockTime;
-		if(diff  > targetTime)
-		{
-			for(xx = 4; xx< 10; xx++){
-			if(diff <= (targetTime * xx).div(3)){
-			 	break;
-			}
-            }
+		while((diff <= (targetTime * x).div(30000)){
+			x++;
+		}
+          
 		}
         require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
        for(uint x=0; x< ExtraFunds.length; x++)
@@ -393,10 +389,10 @@ if(epochCount % (2**(x+1)) == 0){
     {
         uint256 totalOwed = 0;
         if( (x+1) % 3 == 0 && x != 0){
-            totalOwed = (TotalOwned*xx).divRound(2*2500);
+            totalOwed = (TotalOwned*xx).divRound(20000*2500);
         }
         else{
-            totalOwed = (TotalOwned*xx).div(2*2500);  //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+            totalOwed = (TotalOwned*xx).div(20000*2500);  //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
         }
             IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
         
