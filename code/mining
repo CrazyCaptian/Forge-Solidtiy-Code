@@ -169,6 +169,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     address public AddressAuction;
     address public AddressLPReward;
     address public AddressZeroXBTC;
+    ForgeAuctions FA;
 //Events
     using SafeMath2 for uint256;
     using ExtendedMath2 for uint;
@@ -247,7 +248,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         // mint 1 token to setup LPs
         balances[msg.sender] = 100000000;
         emit Transfer(address(0), msg.sender, 100000000);
-        
+        FA = ForgeAuctions(AuctionAddress2);
         
         
     }
@@ -581,7 +582,14 @@ function _startNewMiningEpoch() internal {
    }
    
     function getMiningMinted() public view returns (uint) {
-      return tokensMinted;
+      return 
+      uint eraz = FA.era();
+      if(eraz < 11){
+      	return tokensMinted + 8192 * (FA.era * 600 + FA.days) * 1e18;
+	}
+	else{
+	return tokensMinted + 8192 * (10 * 600 + FA.days) * 1e18;
+	}
     }
 
 
