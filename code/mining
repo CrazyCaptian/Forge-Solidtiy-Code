@@ -333,19 +333,21 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 		    _startNewMiningEpoch();
 
         	uint diff = block.timestamp - previousBlockTime;
-            uint x=10;
+            uint x=3;
 	    		while(diff <= (targetTime * x).div(88)){
 				x++;
 	    		}
             uint ratio = x * 100 / 88;
             uint totalOwed = 0;
 	    
-	    	if(ratio >=400){
-			totalOwed = (reward_amount * x*6).div(88*5 );
+	    	if(ratio >=888){
+			totalOwed = (reward_amount * x).div(88 );
 		else if( ratio >= 200){
                 totalOwed = (reward_amount * 2* x).div(88);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else if( ratio >= 150){
                 totalOwed = (reward_amount * 3* x).div(88 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+            }else if( ratio >= 101){
+                totalOwed = (reward_amount * 4* x).div(88 * 3);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else {
 		        totalOwed = (reward_amount * x).div(88 );
 	    	}
