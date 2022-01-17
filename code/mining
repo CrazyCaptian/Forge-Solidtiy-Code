@@ -245,8 +245,8 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         AddressZeroXBTC = _ZeroXBTCAddress;
         oldecount = epochCount;
         // mint 1 token to setup LPs
-        balances[msg.sender] = 100000000;
-        emit Transfer(address(0), msg.sender, 100000000);
+        balances[msg.sender] = 1000000000000000000;
+        emit Transfer(address(0), msg.sender, 1000000000000000000);
         
         
         
