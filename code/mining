@@ -332,24 +332,26 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
             require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
 		    _startNewMiningEpoch();
 
+            require(block.timestamp > previousBlockTime, "No same second solves");
+
         	uint diff = block.timestamp - previousBlockTime;
             uint x=3;
-	    		while(diff <= (targetTime * x).div(88)){
+	    		while(diff >= (targetTime * x).div(888)){
 				x++;
 	    		}
-            uint ratio = x * 100 / 88;
+            uint ratio = x * 100 / 888;
             uint totalOwed = 0;
 	    
 	    	if(ratio >=1888){
-			totalOwed = (reward_amount * x).div(88 );
+			totalOwed = (reward_amount * x).div(888 );
             }else if( ratio >= 200){
-                totalOwed = (reward_amount * 2* x).div(88);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (reward_amount * 2* x).div(888);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else if( ratio >= 150){
-                totalOwed = (reward_amount * 3* x).div(88 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (reward_amount * 3* x).div(888 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else if( ratio >= 103){
-                totalOwed = (reward_amount * 4* x).div(88 * 3);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (reward_amount * 4* x).div(888 * 3);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else {
-		        totalOwed = (reward_amount * x).div(88 );
+		        totalOwed = (reward_amount * x).div(888 );
 	    	}
 
     
@@ -374,7 +376,7 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
 		uint xx = 10;
         uint diff = block.timestamp - previousBlockTime;
-		while(diff <= (targetTime * xx).div(88)){
+		while(diff >= (targetTime * xx).div(888)){
 			xx++;
 		}
           
@@ -403,32 +405,32 @@ if(epochCount % (2**(x+1)) == 0){
     {
         uint256 totalOwed = 0;
 
-		uint256 ratio = 100 *xx/88;
+		uint256 ratio = 100 *xx/888;
 		if( (x+1) % 3 == 0 && x != 0){
 		
 		if(ratio >=1888){
-			totalOwed = (TotalOwned * xx).divRound(88 * 2500 );
+			totalOwed = (TotalOwned * xx).divRound(888 * 2500 );
 		}else if( ratio >= 200){
-                totalOwed = (TotalOwned * 2* xx).divRound(88 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (TotalOwned * 2* xx).divRound(888 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else if( ratio >= 150){
-                totalOwed = (TotalOwned * 3* xx).divRound(88 * 2 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (TotalOwned * 3* xx).divRound(888 * 2 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else if( ratio >= 103){
-                totalOwed = (TotalOwned * 4* xx).divRound(88 * 3 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (TotalOwned * 4* xx).divRound(888 * 3 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else {
-		        totalOwed = (TotalOwned * xx).divRound(88 );
+		        totalOwed = (TotalOwned * xx).divRound(888 );
 	    	}
 		}
 		else{
 	    	if(ratio >=1888){
-			totalOwed = (TotalOwned * xx).div(88 * 2500 );
+			totalOwed = (TotalOwned * xx).div(888 * 2500 );
 		    }else if( ratio >= 200){
-                totalOwed = (TotalOwned * 2* xx).div(88* 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (TotalOwned * 2* xx).div(888* 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else if( ratio >= 150){
-                totalOwed = (TotalOwned * 3* xx).div(88 * 2 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (TotalOwned * 3* xx).div(888 * 2 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else if( ratio >= 103){
-                totalOwed = (TotalOwned * 4* xx).div(88 * 3 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
+                totalOwed = (TotalOwned * 4* xx).div(888 * 3 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
             }else {
-		        totalOwed = (TotalOwned * xx).div(88 * 2500 );
+		        totalOwed = (TotalOwned * xx).div(888 * 2500 );
 	    	}
 		}
             IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
