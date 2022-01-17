@@ -163,7 +163,7 @@ abstract contract ApproveAndCallFallBack {
 //Main contract
 
 contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
-	uint constant public targetTime = 36 * 60; //= 36 minutes
+	uint constant public targetTime = 60 * 60;
 
 // SUPPORTING CONTRACTS
     address public AddressAuction;
