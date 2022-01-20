@@ -341,29 +341,21 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 	    		}
             uint ratio = x * 100 / 888;
             uint totalOwed = 0;
-	    
-	    	if(ratio >=1888){
-			totalOwed = (reward_amount * x).div(888 );
-            }else if( ratio >= 200){
-                totalOwed = (reward_amount * 2* x).div(888);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else if( ratio >= 150){
-                totalOwed = (reward_amount * 3* x).div(888 * 2);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else if( ratio >= 103){
-                totalOwed = (reward_amount * 4* x).div(888 * 3);   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else {
-		        totalOwed = (reward_amount * x).div(888 );
-	    	}
-
-    
+	    if(ratio < 314){
+	    	totalOwed = (ratio.div(100)) ** (1.70951);
+	    }else {
+	    	totalOwed = (ratio.div(100)) + 3;
+		} 
 
             	uint reward = totalOwed;
 	
-	    	balances[mintTo] = balances[mintTo].add(reward);
-	        balances[AddressLPReward] = balances[AddressLPReward].add((reward).div(2));
+	    	balances[mintTo] = balances[mintTo].add(reward_amount * totalOwed);
+	        balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(2));
 
 	    	tokensMinted = tokensMinted.add(reward.div(2) * 3);
             previousBlockTime = block.timestamp;
             if(give0xBTC > 0){
+	    	if(ratio < 100){
             IERC20(AddressZeroXBTC).transfer(mintTo, Token2Per*give0xBTC);
            }
            emit Mint(msg.sender, reward, epochCount, challengeNumber );
