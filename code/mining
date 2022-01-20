@@ -336,28 +336,31 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 
         	uint diff = block.timestamp - previousBlockTime;
             uint x=3;
+	    		x = (diff * 888) / targetTime
 	    		while(diff >= (targetTime * x).div(888)){
 				x++;
 	    		}
             uint ratio = x * 100 / 888;
             uint totalOwed = 0;
 	    if(ratio < 314){
-	    	totalOwed = (ratio.div(100)) ** (1.70951);
+		totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  00291036) )
 	    }else {
-	    	totalOwed = (ratio.div(100)) + 3;
+	    	totalOwed = (x* 100000000).div(888) + (3500000000)
 		} 
 
             	uint reward = totalOwed;
 	
-	    	balances[mintTo] = balances[mintTo].add(reward_amount * totalOwed);
-	        balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(2));
+	    	balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+	        balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2)));
 
 	    	tokensMinted = tokensMinted.add(reward.div(2) * 3);
             previousBlockTime = block.timestamp;
             if(give0xBTC > 0){
-	    	if(ratio < 100){
-            IERC20(AddressZeroXBTC).transfer(mintTo, Token2Per*give0xBTC);
-           }
+	    	if(ratio < 200){
+            		IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per*give0xBTC).div(100000000));
+           }else{
+	   		IERC20(AddressZeroXBTC).transfer(mintTo, (3.50 * Token2Per*give0xBTC));
+		}
            emit Mint(msg.sender, reward, epochCount, challengeNumber );
            return true;
 }
