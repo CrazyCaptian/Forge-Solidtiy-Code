@@ -164,7 +164,9 @@ abstract contract ApproveAndCallFallBack {
 
 contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	uint constant public targetTime = 60 * 60;
-
+	uint256 testx;
+	uint256 testnum;
+	uint256 testden;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
@@ -456,7 +458,21 @@ function mintTokensSameAddress(uint256 nonce, bytes32 challenge_digest, address[
 }
 
 
+fucntion test(	uint256 _testx,	uint256 _testnum, uint256 _testden ) public {
 
+        //uint diff = _testx - _testnum;
+	 uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+         uint ratio = x * 100 / 888;
+            uint totalOwed = 0;
+	    if(ratio < 314){
+		totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  291036);
+	    }else {
+	    	totalOwed = (x * 100000000).div(888) + (3500000000);
+		} 
+		testx = totalOwed;
+
+	
+}
 function _startNewMiningEpoch() internal {
         
  
