@@ -219,6 +219,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint8 public constant decimals = 18;
     uint public totalLifetimes = 0;
 
+    uint256 lastrun = block.timestamp
     uint public latestDifficultyPeriodStarted = block.number;
     bool inited = false;
     function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
@@ -297,18 +298,28 @@ function AOpenMint(bool nonce, bool challenge_digest) public returns (bool succe
 
 function ARewardSender() public {
     //runs every _BLOCKS_PER_READJUSTMENT / 4
+    
+    uint256 runs = block.timestamp - lastrun;
+    
     uint256 epochsPast = epochCount - oldecount; //actually epoch
+    uint256 runsperepoch = runs / epcohsPast;
+    
     reward_amount = (150 * 10**uint(decimals)).div( 2**rewardEra );
+	x = (runsperperepochs * 888) / targetTime
+	uint ratio = x * 100 / 888;
+	uint256 totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  00291036) )
 
-    if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (6 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
+    if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (21 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
     {
         give0xBTC = 1 * give;
-        IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * Token2Per * give0xBTC) / 2);
+        IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000);
     }
     else{
         give0xBTC = 0;
     }
     oldecount = epochCount; //actually epoch
+    
+    lastrun = block.timestamp
 }
 
 
@@ -340,12 +351,14 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 	    		while(diff >= (targetTime * x).div(888)){
 				x++;
 	    		}
+			
+	    		x = (diff * 888) / targetTime
             uint ratio = x * 100 / 888;
             uint totalOwed = 0;
 	    if(ratio < 314){
 		totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  00291036) )
 	    }else {
-	    	totalOwed = (x* 100000000).div(888) + (3500000000)
+	    	totalOwed = (x * 100000000).div(888) + (3500000000)
 		} 
 
             	uint reward = totalOwed;
@@ -357,9 +370,9 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
             previousBlockTime = block.timestamp;
             if(give0xBTC > 0){
 	    	if(ratio < 200){
-            		IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per*give0xBTC).div(100000000));
+            		IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per * give0xBTC).div(100000000));
            }else{
-	   		IERC20(AddressZeroXBTC).transfer(mintTo, (3.50 * Token2Per*give0xBTC));
+	   		IERC20(AddressZeroXBTC).transfer(mintTo, (35 * Token2Per * give0xBTC).div(10);
 		}
            emit Mint(msg.sender, reward, epochCount, challengeNumber );
            return true;
@@ -527,16 +540,14 @@ function _startNewMiningEpoch() internal {
           uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( ethBlocksSinceLastDifficultyPeriod2 );
 	give = 1;
           uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
-          // If there were 5% more blocks mined than expected then this is 5.  If there were 100% more blocks mined than expected then this is 100.
-
-          //make it harder q
+          //make it harder 
           miningTarget = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
         }else{
           uint shortage_block_pct = (ethBlocksSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
 	give = 2;
           uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
           //make it easier
-          miningTarget = miningTarget.add(miningTarget.div(2000).mult(shortage_block_pct_extra));   //by up to 50 %
+          miningTarget = miningTarget.add(miningTarget.div(1000).mult(shortage_block_pct_extra));   //by up to 100 %
         }
 
 
