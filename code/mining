@@ -231,34 +231,36 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         inited = true;
 	
     	rewardEra = 0;
-	    tokensMinted = 0;
-    	//bitcoin commands short and sweet //sets to previous difficulty
+	tokensMinted = 0;
     	miningTarget = _MAXIMUM_TARGET.div(30005); //5000000 = 31gh/s @ 7 min for FPGA mining
-        //latestDifficultyPeriodStarted2 = block.timestamp;
-    	
+        latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
-    	
-    	
+	
         // Init contract variables and mint
         balances[AuctionAddress2] = x;
-        emit Transfer(address(0), AuctionAddress2, x);
-    	AddressAuction = AuctionAddress2;
 	
+        emit Transfer(address(0), AuctionAddress2, x);
+	
+    	AddressAuction = AuctionAddress2;
         AddressLPReward = payable(LPGuild2);
         AddressZeroXBTC = _ZeroXBTCAddress;
+	
         oldecount = epochCount;
+	
         // mint 1 token to setup LPs
         balances[msg.sender] = 1000000000000000000;
+	
         emit Transfer(address(0), msg.sender, 1000000000000000000);
-        
-        
-        
+     
     }
+
+
 
 	///
 	// Managment
 	///
 	//MUST REMOVE MUST REMOVE
+
 
 	function zinit2(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
 
@@ -336,8 +338,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		mintTo(nonce, challenge_digest, msg.sender);
 	}
 
+
 	//function mintTo(bool nonce, bool challenge_digest,  address mintTo) public returns (bool success) {
-	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (bool success) {
+	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (uit256 owed) {
 
 				bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
@@ -363,8 +366,8 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 				balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
 				balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
-
-				tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(2));
+				
+				tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(100000000 * 2));
 				previousBlockTime = block.timestamp;
 
 				if(give0xBTC > 0){
@@ -377,8 +380,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 			   emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
-			   return true;
+			   return owed;
 	}
+
 
 	//First address for mintSend(Forge + 0xBitcoin), Second address+ for other tokens
 	// REPALCE WITH LINE BELOW in production
@@ -399,12 +403,10 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				}
 
 			}
+			uint256 totalOwed = mintTo(nonce,challenge_digest, MintTo[0])
+			require(totalOwed > 0), "mint issue");
 
-
-			require(mintTo(nonce,challenge_digest, MintTo[0]), "mint issue");
-
-
-			uint savex=0;
+			uint x=0;
 			for(uint x=0; x<ExtraFunds.length; x++)
 			{
 			//exponentialy more valueable
@@ -435,9 +437,8 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				}
 				IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			}
-		savex = x;
 		} 
-		emit MegaMint(msg.sender, totalOwed, epochCount, challengeNumber, savex );
+		emit MegaMint(msg.sender, totalOwed, epochCount, challengeNumber, x );
 
 		return true;
 	}
