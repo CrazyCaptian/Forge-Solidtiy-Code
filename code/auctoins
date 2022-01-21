@@ -216,7 +216,7 @@ contract ForgeMiningCT{
     
     ForgeMiningCT ForgeMiningToken;
     // Events
-        event SetExtraGas(uint256 _prev, uint256 _new);
+    event SetExtraGas(uint256 _prev, uint256 _new);
     event NewEra(uint era, uint emission, uint totalBurnt);
     event NewDay(uint era, uint day, uint time, uint previousDayTotal, uint previousDayMembers);
     event Burn(address indexed payer, address indexed member, uint era, uint day, uint units, uint dailyTotal);
@@ -231,8 +231,6 @@ contract ForgeMiningCT{
     uint256 public lastMinted = 0;
     uint256 public blocktime = 36 * 60; //36 min blocks in ProofOfWork
     //=====================================CREATION=========================================//
-
-    //testing//
 
     // Constructor
     constructor () public {
@@ -250,8 +248,6 @@ contract ForgeMiningCT{
     
     
     
-    // ERC20 Transfer function
-    // ERC20 Approve function
 
 
         function zSetUP1(address token, address _ZeroXBTCAddress) public onlyOwner22 {
@@ -315,14 +311,17 @@ contract ForgeMiningCT{
     {
         uint256 daysleft = daysPerEra - currentDay - 1 ;//just incase
         FutureBurn0xBTCEasier(currentEra, currentDay, daysleft, member, _0xbtcAmountTotal);
+        
         return true;
+        
     }
+    
+    
     //Bids for Future in consequitive days
     function FutureBurn0xBTCEasier(uint _era, uint startingday, uint totalNumberrOfDays, address _member, uint _0xbtcAmountTotal) public returns (bool success)
     {
         uint[] memory dd = new uint[](totalNumberrOfDays); 
         uint[] memory amt = new uint[](totalNumberrOfDays);
-        
         uint y=0;
         for(uint x=startingday; x< (startingday+totalNumberrOfDays); x++)
         {
@@ -335,6 +334,7 @@ contract ForgeMiningCT{
         return true;
     }
 
+
     //Burns any amount for any day(s) in any order
     function FutureBurn0xBTCArrays(uint _era, uint[] memory fdays, address _member, uint[] memory _0xbtcAmount) public returns (bool success)
     {
@@ -343,34 +343,35 @@ contract ForgeMiningCT{
         uint _currentDay = currentDay;
         uint _currentEra = currentEra; 
         require(_era >= currentEra, "no knucklehead only bid on this era");
-    for(uint256 x = 0; x < fdays.length; x++)
-    {
-        uint256 dayamt = _0xbtcAmount[x];
-        if(_era == _currentEra)
+        for(uint256 x = 0; x < fdays.length; x++)
         {
-            require(fdays[x] >= _currentDay, "Must not bid behind the days");
-        }
-        require(fdays[x] <= _daysPerEra, "Cant bid on days not in era");
-        stricttotal = stricttotal.add(dayamt);
-         _recordBurn(msg.sender, _member, _era, fdays[x], dayamt);
+            uint256 dayamt = _0xbtcAmount[x];
+            if(_era == _currentEra)
+            {
+                require(fdays[x] >= _currentDay, "Must not bid behind the days");
+            }
+            require(fdays[x] <= _daysPerEra, "Cant bid on days not in era");
+            stricttotal = stricttotal.add(dayamt);
+            _recordBurn(msg.sender, _member, _era, fdays[x], dayamt);
     }
-        require((stricttotal/fdays.length) >  (one0xBTCUnit/((2 ** _era) * 50)), "0.02 0xBitcoin per Day required, reduces every era");
-        require(IERC20(AddressZeroXBTC).transferFrom(msg.sender, AddressForgeToken, stricttotal), "NO OTHER WAY, send it the required 0xBitcoin");
-        emit BurnMultipleDays(msg.sender, _member, _era, fdays.length, stricttotal);
-        return true;
+    require((stricttotal/fdays.length) >  (one0xBTCUnit/((2 ** _era) * 50)), "0.02 0xBitcoin per Day required, reduces every era");
+    require(IERC20(AddressZeroXBTC).transferFrom(msg.sender, AddressForgeToken, stricttotal), "NO OTHER WAY, send it the required 0xBitcoin");
+        
+    emit BurnMultipleDays(msg.sender, _member, _era, fdays.length, stricttotal);
+        
+    return true;
+    
     }
+
 
     function burn0xBTCForMember(address member, uint256 _0xbtcAmount) public returns (bool success) {
         require(IERC20(AddressZeroXBTC).transferFrom(msg.sender, AddressForgeToken, _0xbtcAmount), "NO WAY, requires 0xBTC send");
-
-
         _recordBurn(msg.sender, member, currentEra, currentDay, _0xbtcAmount);
         emit Burn(msg.sender, member, currentEra, currentDay, _0xbtcAmount, mapEraDay_Units[currentEra][currentDay]);
+        
         return true;
-}
+    }
     
-    
-    // Internal - Withdrawal function
     
     // Internal - Records burn
     function _recordBurn(address _payer, address _member, uint _era, uint _day, uint _eth) private {
@@ -386,17 +387,23 @@ contract ForgeMiningCT{
         _updateEmission();                                                                  // Update emission Schedule
     }
     
+    
+    
         //======================================WITHDRAWAL======================================//
     // Used to efficiently track participation in each era
     function getDaysContributedForEra(address member, uint era) public view returns(uint){
         return mapMemberEra_Days[member][era].length;
     }
+    
+    
     // Call to withdraw a claim
     function withdrawShare(uint era, uint day) external returns (uint value) {
         uint memberUnits = mapEraDay_MemberUnits[era][day][msg.sender];  
         assert (memberUnits != 0); // Get Member Units
         value = _withdrawShare(era, day, msg.sender);
     }
+    
+    
     // Call to withdraw a claim for another member
     function withdrawShareForMember(uint era, uint day, address member) public returns (uint value) {
         uint memberUnits = mapEraDay_MemberUnits[era][day][member];  
@@ -404,6 +411,8 @@ contract ForgeMiningCT{
         value = _withdrawShare(era, day, member);
         return value;
     }
+    
+    
     // Internal - withdraw function
     function _withdrawShare (uint _era, uint _day, address _member) private returns (uint value) {
         _updateEmission(); 
@@ -414,15 +423,21 @@ contract ForgeMiningCT{
                 value = _processWithdrawal(_era, _day, _member);                            // Process Withdrawal
             }
         }  
+        
         return value;
+        
     }
+    
 
     //To change your claiming if somehow error occurs
     function z_ChangeMaxWithdrawl( uint newMaxDay, uint newMaxEra) public returns  (bool success){
         ZmapMember_DayClaimedTo[msg.sender] = newMaxDay;
         ZmapMember_EraClaimedTo[msg.sender] = newMaxEra;
+        
         return true;
+        
     }
+    
     
     //Super easy auction redeeming
     function WithdrawEasiest() public
@@ -446,37 +461,41 @@ contract ForgeMiningCT{
         }
         uint maxDay=1;
         for(uint y=startingera; y <= currentEra; y++){
-          if(y != currentEra)
-           {
+          if(y != currentEra){
                 maxDay = daysPerEra;
-            }
-            else
-            {
-                maxDay = currentDay - 1;
-            }
-           uint[] memory dd = new uint[](maxDay-startingday+1); 
-           for(uint x=startingday; x<= maxDay; x++)
-           {
+          }
+          else
+          {
+               maxDay = currentDay - 1;
+          }
+          uint[] memory dd = new uint[](maxDay-startingday+1); 
+          for(uint x=startingday; x<= maxDay; x++)
+          {
                dd[x-startingday] = x ;
-           }
-           WithdrawlsDays(y, dd, _member);
+          }
+          WithdrawlsDays(y, dd, _member);
         }
+        
         ZmapMember_DayClaimedTo[_member] = currentDay;
         ZmapMember_DayClaimedTo[_member] = currentEra;
+        
     }
+    
+    
     //Withdraws All days in era for member
     function WithdrawlsDays(uint _era, uint[] memory fdays, address _member) public returns (bool success)
     {
-    uint256 stricttotal = 0;
-    for(uint256 x = 0; x < fdays.length; x++)
-    {
-        stricttotal = stricttotal.add( _processWithdrawalRETURNSVAL (_era, fdays[x], _member) );
-    }
-    IERC20(AddressForgeToken).transfer(_member, stricttotal);
-    emit MegaWithdrawal(msg.sender, _member, _era, fdays.length, stricttotal);
+        uint256 stricttotal = 0;
+        for(uint256 x = 0; x < fdays.length; x++)
+        {
+            stricttotal = stricttotal.add( _processWithdrawalRETURNSVAL (_era, fdays[x], _member) );
+        }
+        IERC20(AddressForgeToken).transfer(_member, stricttotal);
+        emit MegaWithdrawal(msg.sender, _member, _era, fdays.length, stricttotal);
     
-    return true;
-}
+        return true;
+    }
+
 
     function _processWithdrawalRETURNSVAL (uint _era, uint256 _day, address _member) private returns (uint256 value) {
         uint memberUnits = mapEraDay_MemberUnits[_era][_day][_member];                      // Get Member Units
@@ -491,8 +510,12 @@ contract ForgeMiningCT{
 
             //We emit all in one transfer.   
         }
+        
         return value*4;
+        
     }
+    
+    
     function _processWithdrawal (uint _era, uint _day, address _member) private returns (uint value) {
         uint memberUnits = mapEraDay_MemberUnits[_era][_day][_member];                      // Get Member Units
         if (memberUnits == 0) { 
@@ -508,11 +531,14 @@ contract ForgeMiningCT{
             // ERC20 transfer function
             IERC20(AddressForgeToken).transfer(_member, value*4); // 8,192 tokens a auction aka almost half the supply an era!
         }
+        
         return value*4;
+        
     }
     
     
     function getEmissionShare(uint era, uint day, address member) public view returns (uint value) {
+    
         uint memberUnits = mapEraDay_MemberUnits[era][day][member];                         // Get Member Units
         if (memberUnits == 0) {
             return 0;                                                                       // If 0, return 0
@@ -525,6 +551,9 @@ contract ForgeMiningCT{
             return  value;                            
         }
     }
+    
+    
+    
     //======================================EMISSION========================================//
     // Internal - Update emission function
     function _updateEmission() private {
@@ -548,6 +577,8 @@ contract ForgeMiningCT{
             
         }
     }
+    
+    
     // Calculate Era emission
     function getNextEraEmission() public view returns (uint) {
         if (emission > coin) {                                                              // Normal Emission Schedule
@@ -556,6 +587,8 @@ contract ForgeMiningCT{
             return coin;                                                                    // Return 1.0 from fees
         }
     }
+    
+    
     // Calculate Day emission
     function getDayEmission() public view returns (uint) {
         uint balance = IERC20(AddressForgeToken).balanceOf(address(this));                                            // Find remaining balance
@@ -565,16 +598,20 @@ contract ForgeMiningCT{
             return balance;                                                                 // Return full balance
         }
     }
+    
+    
     function z_transferERC20TokenToMinerContract(address tokenAddress, uint tokens) public returns (bool success) {
         require((tokenAddress != address(this)) && tokenAddress != AddressForgeToken);
         return IERC20(tokenAddress).transfer(AddressForgeToken, IERC20(tokenAddress).balanceOf(address(this))); 
 
     }
     
+    
   //Do not allow ETH to enter
   receive() external payable {
     revert();
   }
+
 
   fallback() external payable {
     revert();
