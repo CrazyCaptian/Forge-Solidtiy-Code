@@ -219,7 +219,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint8 public constant decimals = 18;
     uint public totalLifetimes = 0;
 
-    uint256 lastrun = block.timestamp
+    uint256 lastrun = block.timestamp;
     uint public latestDifficultyPeriodStarted = block.number;
     bool inited = false;
     function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
@@ -302,24 +302,28 @@ function ARewardSender() public {
     uint256 runs = block.timestamp - lastrun;
     
     uint256 epochsPast = epochCount - oldecount; //actually epoch
-    uint256 runsperepoch = runs / epcohsPast;
+    uint256 runsperepoch = runs / epochsPast;
     
     reward_amount = (150 * 10**uint(decimals)).div( 2**rewardEra );
-	x = (runsperperepochs * 888) / targetTime
-	uint ratio = x * 100 / 888;
-	uint256 totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  00291036) )
-
+	uint256 x = (runsperepoch * 888) / targetTime;
+	uint256 ratio = x * 100 / 888;
+    uint256 totalOwed;
+     if(ratio < 314){
+	    totalOwed = (( 61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) -  291036) ;
+     }else {
+	    totalOwed = (x * 100000000).div(888) + (3500000000);
+		} 
     if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (21 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
     {
         give0xBTC = 1 * give;
-        IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000);
+        IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
     }
     else{
         give0xBTC = 0;
     }
     oldecount = epochCount; //actually epoch
     
-    lastrun = block.timestamp
+    lastrun = block.timestamp;
 }
 
 
@@ -333,7 +337,6 @@ function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool succ
 //function mintTo(bool nonce, bool challenge_digest,  address mintTo) public returns (bool success) {
 function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (bool success) {
 
-    		tokensMinted.add(reward_amount);
             bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
             //the challenge digest must match the expected
@@ -345,35 +348,30 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 
             require(block.timestamp > previousBlockTime, "No same second solves");
 
-        	uint diff = block.timestamp - previousBlockTime;
-            uint x=3;
-	    		x = (diff * 888) / targetTime
-	    		while(diff >= (targetTime * x).div(888)){
-				x++;
-	    		}
-			
-	    		x = (diff * 888) / targetTime
+        	//uint diff = block.timestamp - previousBlockTime;
+	        uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
             uint ratio = x * 100 / 888;
             uint totalOwed = 0;
 	    if(ratio < 314){
-		totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  00291036) )
+		totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  291036);
 	    }else {
-	    	totalOwed = (x * 100000000).div(888) + (3500000000)
+	    	totalOwed = (x * 100000000).div(888) + (3500000000);
 		} 
 
             	uint reward = totalOwed;
 	
 	    	balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-	        balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2)));
+	        balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
 
-	    	tokensMinted = tokensMinted.add(reward.div(2) * 3);
+	    	tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(2));
             previousBlockTime = block.timestamp;
             if(give0xBTC > 0){
-	    	if(ratio < 200){
-            		IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per * give0xBTC).div(100000000));
-           }else{
-	   		IERC20(AddressZeroXBTC).transfer(mintTo, (35 * Token2Per * give0xBTC).div(10);
-		}
+	    	    if(ratio < 200){
+                	IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per * give0xBTC).div(100000000));
+                }else{
+	   	    	    IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
+	        	}
+            }
            emit Mint(msg.sender, reward, epochCount, challengeNumber );
            return true;
 }
@@ -382,11 +380,12 @@ function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public
 // REPALCE WITH LINE BELOW in production
 //function mintTokensArrayTo(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
 function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
-		uint xx = 10;
-        uint diff = block.timestamp - previousBlockTime;
-		while(diff >= (targetTime * xx).div(888)){
-			xx++;
-		}
+          
+	    uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+            uint ratio = xx * 100 / 888;
+            uint totalOwed = 0;
+	   
+
           
 		
         require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
@@ -400,6 +399,7 @@ function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] me
 
     	}
 	
+
     require(mintTo(nonce,challenge_digest, MintTo[0]), "mint issue");
 
     
@@ -415,46 +415,29 @@ if(epochCount % (2**(x+1)) == 0){
 
 		uint256 ratio = 100 *xx/888;
 		if( (x+1) % 3 == 0 && x != 0){
-		
-		if(ratio >=1888){
-			totalOwed = (TotalOwned * xx).divRound(888 * 2500 );
-		}else if( ratio >= 200){
-                totalOwed = (TotalOwned * 2* xx).divRound(888 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else if( ratio >= 150){
-                totalOwed = (TotalOwned * 3* xx).divRound(888 * 2 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else if( ratio >= 103){
-                totalOwed = (TotalOwned * 4* xx).divRound(888 * 3 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else {
-		        totalOwed = (TotalOwned * xx).divRound(888 );
-	    	}
+		 if(ratio < 314){
+			totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  291036) ;
+			totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500 );
+	    }else {
+	    		totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
+			totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500);
+		} 
 		}
-		else{
-	    	if(ratio >=1888){
-			totalOwed = (TotalOwned * xx).div(888 * 2500 );
-		    }else if( ratio >= 200){
-                totalOwed = (TotalOwned * 2* xx).div(888* 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else if( ratio >= 150){
-                totalOwed = (TotalOwned * 3* xx).div(888 * 2 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else if( ratio >= 103){
-                totalOwed = (TotalOwned * 4* xx).div(888 * 3 * 2500 );   //2500 was chosen to give each token a ~1/4 year per token of distribution using Proof-of-Work
-            }else {
-		        totalOwed = (TotalOwned * xx).div(888 * 2500 );
-	    	}
+		else{		 
+		if(ratio < 314){
+			totalOwed = (( 61001200 * (x ^ 2 )).div(888^2)+ (40861500 * x).div(888) -  291036);
+            totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500 );
+	   	 }else {
+	    		totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
+			totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500);
+			} 
+		}
 		}
             IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
         
     }
     savex = x;
-    } else {
-
-
-
-    }
-				
-        
-    }
-    
-    
+    } 
     emit MegaMint(msg.sender, reward_amount, epochCount, challengeNumber, savex );
     return true;
 }
