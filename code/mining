@@ -255,533 +255,533 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         
     }
 
-///
-// Managment
-///
-//MUST REMOVE MUST REMOVE
+	///
+	// Managment
+	///
+	//MUST REMOVE MUST REMOVE
 
-function zinit2(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
+	function zinit2(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
 
-    	AddressAuction = AuctionAddress2;
-        AddressLPReward = payable(LPGuild2);
-        AddressZeroXBTC = _ZeroXBTCAddress;
-        
-    }
+			AddressAuction = AuctionAddress2;
+			AddressLPReward = payable(LPGuild2);
+			AddressZeroXBTC = _ZeroXBTCAddress;
 
-
-function AOpenMint(bool nonce, bool challenge_digest) public returns (bool success) {
-
-     	    _startNewMiningEpoch();
-
-        	uint diff = block.timestamp - previousBlockTime;
-	    	uint x = 4;
-	    	if(diff  > targetTime)
-	    	{
-	    		for(x = 4; x< 10; x++){
-	    		if(diff <= (targetTime * x).div(3)){
-	    		 	break;
-	    		}}
-	    	}
-            uint reward = (x * reward_amount).div(4);
-	
-	    	balances[msg.sender] = balances[msg.sender].add(reward);
-	        balances[AddressLPReward] = balances[AddressLPReward].add((reward).div(2));
+		}
 
 
-	    	tokensMinted = tokensMinted.add(reward);
-            previousBlockTime = block.timestamp;
-            if(give0xBTC > 0){
-            IERC20(AddressZeroXBTC).transfer(msg.sender, Token2Per*give0xBTC);
-           }
-           emit Mint(msg.sender, reward_amount, epochCount, challengeNumber );
-           return true;
-    }
+	function AOpenMint(bool nonce, bool challenge_digest) public returns (bool success) {
+
+				_startNewMiningEpoch();
+
+				uint diff = block.timestamp - previousBlockTime;
+				uint x = 4;
+				if(diff  > targetTime)
+				{
+					for(x = 4; x< 10; x++){
+					if(diff <= (targetTime * x).div(3)){
+						break;
+					}}
+				}
+				uint reward = (x * reward_amount).div(4);
+
+				balances[msg.sender] = balances[msg.sender].add(reward);
+				balances[AddressLPReward] = balances[AddressLPReward].add((reward).div(2));
 
 
-function ARewardSender() public {
-    //runs every _BLOCKS_PER_READJUSTMENT / 4
-    
-    uint256 runs = block.timestamp - lastrun;
-    
-    uint256 epochsPast = epochCount - oldecount; //actually epoch
-    uint256 runsperepoch = runs / epochsPast;
-    
-    reward_amount = (150 * 10**uint(decimals)).div( 2**rewardEra );
-	uint256 x = (runsperepoch * 888) / targetTime;
-	uint256 ratio = x * 100 / 888;
-    uint256 totalOwed;
-     if(ratio < 314){
-	    totalOwed = (( 61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) -  291036) ;
-     }else {
-	    totalOwed = (x * 100000000).div(888) + (3500000000);
+				tokensMinted = tokensMinted.add(reward);
+				previousBlockTime = block.timestamp;
+				if(give0xBTC > 0){
+				IERC20(AddressZeroXBTC).transfer(msg.sender, Token2Per*give0xBTC);
+			   }
+			   emit Mint(msg.sender, reward_amount, epochCount, challengeNumber );
+			   return true;
+		}
+
+
+	function ARewardSender() public {
+		//runs every _BLOCKS_PER_READJUSTMENT / 4
+
+		uint256 runs = block.timestamp - lastrun;
+
+		uint256 epochsPast = epochCount - oldecount; //actually epoch
+		uint256 runsperepoch = runs / epochsPast;
+
+		reward_amount = (150 * 10**uint(decimals)).div( 2**rewardEra );
+		uint256 x = (runsperepoch * 888) / targetTime;
+		uint256 ratio = x * 100 / 888;
+		uint256 totalOwed;
+		 if(ratio < 314){
+			totalOwed = (( 61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) -  291036) ;
+		 }else {
+			totalOwed = (x * 100000000).div(888) + (3500000000);
+			} 
+		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (21 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
+		{
+			give0xBTC = 1 * give;
+			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
+		}
+		else{
+			give0xBTC = 0;
+		}
+		oldecount = epochCount; //actually epoch
+
+		lastrun = block.timestamp;
+	}
+
+
+	//Mints to the payee Forge, 0xBitcoin always to the sender. Making it the heaviest currency in here.
+	//
+	//function mint(bool nonce, bool challenge_digest) public returns (bool success) {
+	function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
+		mintTo(nonce, challenge_digest, msg.sender);
+	}
+
+	//function mintTo(bool nonce, bool challenge_digest,  address mintTo) public returns (bool success) {
+	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (bool success) {
+
+				bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
+
+				//the challenge digest must match the expected
+				require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
+
+				//the digest must be smaller than the target
+				require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
+				_startNewMiningEpoch();
+
+				require(block.timestamp > previousBlockTime, "No same second solves");
+
+				//uint diff = block.timestamp - previousBlockTime;
+				uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+				uint ratio = x * 100 / 888;
+				uint totalOwed = 0;
+				if(ratio < 314){
+					totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
+				}else {
+					totalOwed = (x * 100000000).div(888) + (3500000000);
+				} 
+
+
+				balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+				balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
+
+				tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(2));
+				previousBlockTime = block.timestamp;
+
+				if(give0xBTC > 0){
+					if(ratio < 200){
+						IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per * give0xBTC).div(100000000));
+					}else{
+						IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
+					}
+				}
+
+			   emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+
+			   return true;
+	}
+
+	//First address for mintSend(Forge + 0xBitcoin), Second address+ for other tokens
+	// REPALCE WITH LINE BELOW in production
+	//function mintTokensArrayTo(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
+	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
+
+			uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+			uint ratio = xx * 100 / 888;
+			uint totalOwed = 0;
+
+			require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
+			for(uint x=0; x< ExtraFunds.length; x++)
+			{
+				require(ExtraFunds[x] != address(this) && ExtraFunds[x] != AddressZeroXBTC, "No base printing of tokens");
+
+				for(uint y=1; y< ExtraFunds.length; y++){
+					require(ExtraFunds[y] != ExtraFunds[x] || x == y, "No printing The same tokens");
+				}
+
+			}
+
+
+			require(mintTo(nonce,challenge_digest, MintTo[0]), "mint issue");
+
+
+			uint savex=0;
+			for(uint x=0; x<ExtraFunds.length; x++)
+			{
+			//exponentialy more valueable
+			if(epochCount % (2**(x+1)) == 0){
+				uint256 TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
+				if(TotalOwned != 0)
+				{
+					uint256 totalOwed = 0;
+					uint256 ratio = 100 *xx/888;
+					if( (x+1) % 3 == 0 && x != 0){
+						if(ratio < 314){
+							totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036) ;
+							totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500 );
+						}else {
+							totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
+							totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500);
+						}
+
+					}else{
+						if(ratio < 314){
+							totalOwed = (( 61001200 * (x ** 2 )).div(888 **2)+ (40861500 * x).div(888) -  291036);
+							totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500 );
+						}else {
+							totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
+							totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500);
+						} 
+					}
+				}
+				IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
+			}
+		savex = x;
 		} 
-    if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (21 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
-    {
-        give0xBTC = 1 * give;
-        IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
-    }
-    else{
-        give0xBTC = 0;
-    }
-    oldecount = epochCount; //actually epoch
-    
-    lastrun = block.timestamp;
-}
-
-
-//Mints to the payee Forge, 0xBitcoin always to the sender. Making it the heaviest currency in here.
-//
-//function mint(bool nonce, bool challenge_digest) public returns (bool success) {
-function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
-    mintTo(nonce, challenge_digest, msg.sender);
-}
-
-//function mintTo(bool nonce, bool challenge_digest,  address mintTo) public returns (bool success) {
-function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (bool success) {
-
-            bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
-
-            //the challenge digest must match the expected
-            require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
-
-            //the digest must be smaller than the target
-            require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
-		    _startNewMiningEpoch();
-
-            require(block.timestamp > previousBlockTime, "No same second solves");
-
-        	//uint diff = block.timestamp - previousBlockTime;
-	        uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-            uint ratio = x * 100 / 888;
-            uint totalOwed = 0;
-	        if(ratio < 314){
-	        	totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
-	        }else {
-	        	totalOwed = (x * 100000000).div(888) + (3500000000);
-	    	} 
-
-	
-	    	balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-	        balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
-
-	    	tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(2));
-            previousBlockTime = block.timestamp;
-
-            if(give0xBTC > 0){
-	    	    if(ratio < 200){
-                	IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per * give0xBTC).div(100000000));
-                }else{
-	   	    	    IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
-	        	}
-            }
-
-           emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
-
-           return true;
-}
-
-//First address for mintSend(Forge + 0xBitcoin), Second address+ for other tokens
-// REPALCE WITH LINE BELOW in production
-//function mintTokensArrayTo(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
-function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
-          
-	    uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-        uint ratio = xx * 100 / 888;
-        uint totalOwed = 0;
-
-        require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
-        for(uint x=0; x< ExtraFunds.length; x++)
-        {
-            require(ExtraFunds[x] != address(this) && ExtraFunds[x] != AddressZeroXBTC, "No base printing of tokens");
-        
-            for(uint y=1; y< ExtraFunds.length; y++){
-                require(ExtraFunds[y] != ExtraFunds[x] || x == y, "No printing The same tokens");
-            }
-
-    	}
-	
-
-        require(mintTo(nonce,challenge_digest, MintTo[0]), "mint issue");
-
-    
-        uint savex=0;
-        for(uint x=0; x<ExtraFunds.length; x++)
-        {
-        //exponentialy more valueable
-        if(epochCount % (2**(x+1)) == 0){
-            uint256 TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
-            if(TotalOwned != 0)
-            {
-                uint256 totalOwed = 0;
-        		uint256 ratio = 100 *xx/888;
-		        if( (x+1) % 3 == 0 && x != 0){
-		            if(ratio < 314){
-			            totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036) ;
-			            totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500 );
-	                }else {
-	    		        totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
-			            totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500);
-		            }
-
-		        }else{
-                    if(ratio < 314){
-			            totalOwed = (( 61001200 * (x ** 2 )).div(888 **2)+ (40861500 * x).div(888) -  291036);
-                        totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500 );
-	   	            }else {
-	    		        totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
-			            totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500);
-			        } 
-		        }
-		    }
-            IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
-        }
-    savex = x;
-    } 
-    emit MegaMint(msg.sender, totalOwed, epochCount, challengeNumber, savex );
-
-    return true;
-}
-    
-
-
-function mintTokensSameAddress(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
-    address[] memory dd = new address[](ExtraFunds.length + 1); 
-
-    for(uint x=0; x< (ExtraFunds.length + 1); x++)
-    {
-        dd[x] = MintTo;
-    }
-    mintTokensArrayTo(nonce, challenge_digest, ExtraFunds, dd);
-        
-    return true;
-}
-
-
-function test(	uint256 _testx,	uint256 _testthisblk, uint256 _testlastblk ) public {
-
-	uint256 x = ((_testthisblk - _testlastblk) * 888) / targetTime;
-    testden = x;
-    uint ratio = x * 100 / 888;
-    uint totalOwed = 0;
-	if(ratio < 314){
-		totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
-	}else {
-	    totalOwed = (x * 100000000).div(888) + (3500000000);
-	} 
-	testx = totalOwed;	
-}
-
-function _startNewMiningEpoch() internal {
-        
- 
-    //if max supply for the era will be exceeded next reward round then enter the new era before that happens
-
-    //40 is the final reward era, almost all tokens minted
-    //once the final era is reached, more tokens will not be given out because the assert function
-    if( tokensMinted.add((reward_amount)) > maxSupplyForEra && rewardEra < 39)
-    {
-        rewardEra = rewardEra + 1;
-        miningTarget = miningTarget.div(2 ** rewardEra);
-    }
-
-    //set the next minted supply at which the era will change
-    // total supply of MINED tokens is 21000000000000000000000000  because of 16 decimal places
-
-    epochCount = epochCount.add(1);
-
-    //every so often, readjust difficulty. Dont readjust when deploying
-    if((epochCount) % (_BLOCKS_PER_READJUSTMENT / 4) == 0)
-    {
-        ARewardSender();
-		maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
-
-        if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
-        {
-            if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= 20000) //chosen to give keep 250 days payouts in reserve at current payout
-            {
-                if(Token2Per.div(2) > Token2Min)
-                {
-                    Token2Per = Token2Per.div(2);
-                }
-            }else{
-                Token2Per = Token2Per.mult(3);
-            }
-            _reAdjustDifficulty();
-        }
-    }
-
-    challengeNumber = blockhash(block.number - 1);
-}
-
-
-
-
-function _reAdjustDifficulty() internal {
-
-    uint256 blktimestamp = block.timestamp;
-    uint ethBlocksSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
+		emit MegaMint(msg.sender, totalOwed, epochCount, challengeNumber, savex );
+
+		return true;
+	}
 
-    uint adjusDiffTargetTime = targetTime * epochsMined * _BLOCKS_PER_READJUSTMENT; //36 min per block 60 sec * 12
 
-    //if there were less eth blocks passed in time than expected
-    if( ethBlocksSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
-    {
-        uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( ethBlocksSinceLastDifficultyPeriod2 );
-	    give = 1;
-        uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
-        //make it harder 
-        miningTarget = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
-    }else{
-        uint shortage_block_pct = (ethBlocksSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
-	    give = 2;
-        uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
-        //make it easier
-        miningTarget = miningTarget.add(miningTarget.div(1000).mult(shortage_block_pct_extra));   //by up to 100 %
-    }
 
-    latestDifficultyPeriodStarted2 = blktimestamp;
+	function mintTokensSameAddress(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
+		address[] memory dd = new address[](ExtraFunds.length + 1); 
+
+		for(uint x=0; x< (ExtraFunds.length + 1); x++)
+		{
+			dd[x] = MintTo;
+		}
+		mintTokensArrayTo(nonce, challenge_digest, ExtraFunds, dd);
 
-    if(miningTarget < _MINIMUM_TARGET) //very difficult
-    {
-        miningTarget = _MINIMUM_TARGET;
-    }
-    if(miningTarget > _MAXIMUM_TARGET) //very easy
-    {
-        miningTarget = _MAXIMUM_TARGET;
-    }
-}
+		return true;
+	}
+
+
+	function test(	uint256 _testx,	uint256 _testthisblk, uint256 _testlastblk ) public {
+
+		uint256 x = ((_testthisblk - _testlastblk) * 888) / targetTime;
+		testden = x;
+		uint ratio = x * 100 / 888;
+		uint totalOwed = 0;
+		if(ratio < 314){
+			totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
+		}else {
+			totalOwed = (x * 100000000).div(888) + (3500000000);
+		} 
+		testx = totalOwed;	
+	}
 
+	function _startNewMiningEpoch() internal {
 
-    //42 m coins total
-    // = 
-    //21 million proof of work
-    // + 
-    //10.5 million proof of burn
-    // +
-    //10.5 million rewards for Liquidity Providers
 
+		//if max supply for the era will be exceeded next reward round then enter the new era before that happens
 
+		//40 is the final reward era, almost all tokens minted
+		//once the final era is reached, more tokens will not be given out because the assert function
+		if( tokensMinted.add((reward_amount)) > maxSupplyForEra && rewardEra < 39)
+		{
+			rewardEra = rewardEra + 1;
+			miningTarget = miningTarget.div(2 ** rewardEra);
+		}
 
+		//set the next minted supply at which the era will change
+		// total supply of MINED tokens is 21000000000000000000000000  because of 16 decimal places
 
-//help debug mining software
-function checkMintSolution(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number, uint testTarget) public view returns (bool success) {
-    bytes32 digest = bytes32(keccak256(abi.encodePacked(challenge_number,msg.sender,nonce)));
-    if(uint256(digest) > testTarget) revert();
+		epochCount = epochCount.add(1);
 
-    return (digest == challenge_digest);
-}
-		
-		
+		//every so often, readjust difficulty. Dont readjust when deploying
+		if((epochCount) % (_BLOCKS_PER_READJUSTMENT / 4) == 0)
+		{
+			ARewardSender();
+			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 
-//this is a recent ethereum block hash, used to prevent pre-mining future blocks
-function getChallengeNumber() public view returns (bytes32) {
-    
-    return challengeNumber;
+			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
+			{
+				if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= 20000) //chosen to give keep 250 days payouts in reserve at current payout
+				{
+					if(Token2Per.div(2) > Token2Min)
+					{
+						Token2Per = Token2Per.div(2);
+					}
+				}else{
+					Token2Per = Token2Per.mult(3);
+				}
+				_reAdjustDifficulty();
+			}
+		}
 
-}
+		challengeNumber = blockhash(block.number - 1);
+	}
 
-//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
-function getMiningDifficulty() public view returns (uint) {
 
-    return _MAXIMUM_TARGET.div(miningTarget);
-}
 
-function getMiningTarget() public view returns (uint) {
 
-    return miningTarget;
+	function _reAdjustDifficulty() internal {
 
-}
-   
-function getMiningMinted() public view returns (uint) {
+		uint256 blktimestamp = block.timestamp;
+		uint ethBlocksSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 
-    return tokensMinted;
+		uint adjusDiffTargetTime = targetTime * epochsMined * _BLOCKS_PER_READJUSTMENT; //36 min per block 60 sec * 12
 
-}
+		//if there were less eth blocks passed in time than expected
+		if( ethBlocksSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
+		{
+			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( ethBlocksSinceLastDifficultyPeriod2 );
+			give = 1;
+			uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
+			//make it harder 
+			miningTarget = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
+		}else{
+			uint shortage_block_pct = (ethBlocksSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
+			give = 2;
+			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
+			//make it easier
+			miningTarget = miningTarget.add(miningTarget.div(1000).mult(shortage_block_pct_extra));   //by up to 100 %
+		}
 
+		latestDifficultyPeriodStarted2 = blktimestamp;
 
-//21m coins total
-//reward begins at 150 and is cut in half every reward era (as tokens are mined)
-function getMiningReward() public view returns (uint) {
-    //once we get half way thru the coins, only get 25 per block
-    //every reward era, the reward amount halves.
+		if(miningTarget < _MINIMUM_TARGET) //very difficult
+		{
+			miningTarget = _MINIMUM_TARGET;
+		}
+		if(miningTarget > _MAXIMUM_TARGET) //very easy
+		{
+			miningTarget = _MAXIMUM_TARGET;
+		}
+	}
 
-    return (150 * 10**uint(decimals) ).div( 2**rewardEra ) ;
 
-    }
+		//42 m coins total
+		// = 
+		//21 million proof of work
+		// + 
+		//10.5 million proof of burn
+		// +
+		//10.5 million rewards for Liquidity Providers
 
 
-function getEpoch() public view returns (uint) {
 
-    return epochCount ;
 
-}
+	//help debug mining software
+	function checkMintSolution(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number, uint testTarget) public view returns (bool success) {
+		bytes32 digest = bytes32(keccak256(abi.encodePacked(challenge_number,msg.sender,nonce)));
+		if(uint256(digest) > testTarget) revert();
 
+		return (digest == challenge_digest);
+	}
 
 
 
+	//this is a recent ethereum block hash, used to prevent pre-mining future blocks
+	function getChallengeNumber() public view returns (bytes32) {
 
-//help debug mining software
-function getMintDigest(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number) public view returns (bytes32 digesttest) {
+		return challengeNumber;
 
-    bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
+	}
 
-    return digest;
+	//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
+	function getMiningDifficulty() public view returns (uint) {
 
-}
+		return _MAXIMUM_TARGET.div(miningTarget);
+	}
 
+	function getMiningTarget() public view returns (uint) {
 
+		return miningTarget;
 
-    // ------------------------------------------------------------------------
+	}
 
-    // Total supply
+	function getMiningMinted() public view returns (uint) {
 
-    // ------------------------------------------------------------------------
+		return tokensMinted;
 
+	}
 
 
+	//21m coins total
+	//reward begins at 150 and is cut in half every reward era (as tokens are mined)
+	function getMiningReward() public view returns (uint) {
+		//once we get half way thru the coins, only get 25 per block
+		//every reward era, the reward amount halves.
 
+		return (150 * 10**uint(decimals) ).div( 2**rewardEra ) ;
 
-    // ------------------------------------------------------------------------
+		}
 
-    // Get the token balance for account `tokenOwner`
 
-    // ------------------------------------------------------------------------
+	function getEpoch() public view returns (uint) {
 
-function balanceOf(address tokenOwner) public override view returns (uint balance) {
+		return epochCount ;
 
-    return balances[tokenOwner];
+	}
 
-}
 
 
 
-    // ------------------------------------------------------------------------
 
-    // Transfer the balance from token owner's account to `to` account
+	//help debug mining software
+	function getMintDigest(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number) public view returns (bytes32 digesttest) {
 
-    // - Owner's account must have sufficient balance to transfer
+		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
-    // - 0 value transfers are allowed
+		return digest;
 
-    // ------------------------------------------------------------------------
+	}
 
-function transfer(address to, uint tokens) public override returns (bool success) {
 
-    balances[msg.sender] = balances[msg.sender].sub(tokens);
-    balances[to] = balances[to].add(tokens);
 
-    emit Transfer(msg.sender, to, tokens);
+		// ------------------------------------------------------------------------
 
-    return true;
+		// Total supply
 
-}
+		// ------------------------------------------------------------------------
 
 
 
-    // ------------------------------------------------------------------------
 
-    // Token owner can approve for `spender` to transferFrom(...) `tokens`
 
-    // from the token owner's account
+		// ------------------------------------------------------------------------
 
-    //
+		// Get the token balance for account `tokenOwner`
 
-    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md
+		// ------------------------------------------------------------------------
 
-    // recommends that there are no checks for the approval double-spend attack
+	function balanceOf(address tokenOwner) public override view returns (uint balance) {
 
-    // as this should be implemented in user interfaces
+		return balances[tokenOwner];
 
-    // ------------------------------------------------------------------------
+	}
 
-function approve(address spender, uint tokens) public override returns (bool success) {
 
-    allowed[msg.sender][spender] = tokens;
 
-    emit Approval(msg.sender, spender, tokens);
+		// ------------------------------------------------------------------------
 
-    return true;
+		// Transfer the balance from token owner's account to `to` account
 
-}
+		// - Owner's account must have sufficient balance to transfer
 
+		// - 0 value transfers are allowed
 
+		// ------------------------------------------------------------------------
 
-    // ------------------------------------------------------------------------
+	function transfer(address to, uint tokens) public override returns (bool success) {
 
-    // Transfer `tokens` from the `from` account to the `to` account
+		balances[msg.sender] = balances[msg.sender].sub(tokens);
+		balances[to] = balances[to].add(tokens);
 
-    //
+		emit Transfer(msg.sender, to, tokens);
 
-    // The calling account must already have sufficient tokens approve(...)-d
+		return true;
 
-    // for spending from the `from` account and
+	}
 
-    // - From account must have sufficient balance to transfer
 
-    // - Spender must have sufficient allowance to transfer
 
-    // - 0 value transfers are allowed
+		// ------------------------------------------------------------------------
 
-    // ------------------------------------------------------------------------
+		// Token owner can approve for `spender` to transferFrom(...) `tokens`
 
-function transferFrom(address from, address to, uint tokens) public override returns (bool success) {
+		// from the token owner's account
 
-    balances[from] = balances[from].sub(tokens);
-    allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
-    balances[to] = balances[to].add(tokens);
+		//
 
-    emit Transfer(from, to, tokens);
+		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md
 
-    return true;
+		// recommends that there are no checks for the approval double-spend attack
 
-}
+		// as this should be implemented in user interfaces
 
+		// ------------------------------------------------------------------------
 
-    // ------------------------------------------------------------------------
+	function approve(address spender, uint tokens) public override returns (bool success) {
 
-    // Returns the amount of tokens approved by the owner that can be
+		allowed[msg.sender][spender] = tokens;
 
-    // transferred to the spender's account
+		emit Approval(msg.sender, spender, tokens);
 
-    // ------------------------------------------------------------------------
+		return true;
 
-function allowance(address tokenOwner, address spender) public override view returns (uint remaining) {
+	}
 
-    return allowed[tokenOwner][spender];
 
-}
 
+		// ------------------------------------------------------------------------
 
+		// Transfer `tokens` from the `from` account to the `to` account
 
-    // ------------------------------------------------------------------------
+		//
 
-    // Token owner can approve for `spender` to transferFrom(...) `tokens`
+		// The calling account must already have sufficient tokens approve(...)-d
 
-    // from the token owner's account. The `spender` contract function
+		// for spending from the `from` account and
 
-    // `receiveApproval(...)` is then executed
+		// - From account must have sufficient balance to transfer
 
-    // ------------------------------------------------------------------------
+		// - Spender must have sufficient allowance to transfer
 
-function receiveApproval(address from, uint256 tokens, address token, bytes memory data) public override{
+		// - 0 value transfers are allowed
 
-    require(token == address(this));
-    IERC20(address(this)).transfer(from, tokens);  
-}
-    
+		// ------------------------------------------------------------------------
 
+	function transferFrom(address from, address to, uint tokens) public override returns (bool success) {
 
+		balances[from] = balances[from].sub(tokens);
+		allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
+		balances[to] = balances[to].add(tokens);
 
-  //Do not allow ETH to enter
-receive() external payable {
+		emit Transfer(from, to, tokens);
 
-    revert();
-}
+		return true;
 
-fallback() external payable {
+	}
 
-    revert();
-}
 
-        
+		// ------------------------------------------------------------------------
+
+		// Returns the amount of tokens approved by the owner that can be
+
+		// transferred to the spender's account
+
+		// ------------------------------------------------------------------------
+
+	function allowance(address tokenOwner, address spender) public override view returns (uint remaining) {
+
+		return allowed[tokenOwner][spender];
+
+	}
+
+
+
+		// ------------------------------------------------------------------------
+
+		// Token owner can approve for `spender` to transferFrom(...) `tokens`
+
+		// from the token owner's account. The `spender` contract function
+
+		// `receiveApproval(...)` is then executed
+
+		// ------------------------------------------------------------------------
+
+	function receiveApproval(address from, uint256 tokens, address token, bytes memory data) public override{
+
+		require(token == address(this));
+		IERC20(address(this)).transfer(from, tokens);  
+	}
+
+
+
+
+	  //Do not allow ETH to enter
+	receive() external payable {
+
+		revert();
+	}
+
+	fallback() external payable {
+
+		revert();
+	}
+
+
 }
