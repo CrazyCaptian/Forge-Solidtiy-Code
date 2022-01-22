@@ -317,7 +317,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		 }else {
 			totalOwed = (x * 100000000).div(888) + (3500000000);
 			} 
-		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (21 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
+		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
 		{
 			give0xBTC = 1 * give;
 			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
@@ -372,7 +372,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 				if(give0xBTC > 0){
 					if(ratio < 200){
-						IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed *Token2Per * give0xBTC).div(100000000));
+						IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000));
 					}else{
 						IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
 					}
@@ -398,8 +398,8 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 			{
 				require(ExtraFunds[x] != address(this) && ExtraFunds[x] != AddressZeroXBTC, "No base printing of tokens");
 
-				for(uint y=1; y< ExtraFunds.length; y++){
-					require(ExtraFunds[y] != ExtraFunds[x] || x == y, "No printing The same tokens");
+				for(uint y=x+1; y< ExtraFunds.length; y++){
+					require(ExtraFunds[y] != ExtraFunds[x], "No printing The same tokens");
 				}
 
 			}
