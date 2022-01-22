@@ -396,6 +396,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
 		for(uint x=0; x< ExtraFunds.length; x++)
 		{
+			if(epochCount % (2**(x+1)) != 0){
+				break;
+			}
 			require(ExtraFunds[x] != address(this) && ExtraFunds[x] != AddressZeroXBTC, "No base printing of tokens");
 			for(uint y=x+1; y< ExtraFunds.length; y++){
 				require(ExtraFunds[y] != ExtraFunds[x], "No printing The same tokens");
