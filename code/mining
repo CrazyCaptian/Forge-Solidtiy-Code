@@ -456,6 +456,28 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
+	function empty_mintTo(uint256 nonce, bytes32 challenge_digest) public returns (uit256 owed) {
+
+				bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
+
+				//the challenge digest must match the expected
+				require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
+
+				//the digest must be smaller than the target
+				require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
+				_startNewMiningEpoch();
+
+				require(block.timestamp > previousBlockTime, "No same second solves");
+
+				previousBlockTime = block.timestamp;
+
+
+			   emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+
+			   return owed;
+			   
+	}
+
 	function test(	uint256 _testx,	uint256 _testthisblk, uint256 _testlastblk ) public {
 
 		uint256 x = ((_testthisblk - _testlastblk) * 888) / targetTime;
