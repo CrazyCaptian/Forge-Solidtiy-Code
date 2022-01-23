@@ -167,6 +167,8 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	uint256 public testx;
 	uint256 public  testnum;
 	uint256 public testden;
+    uint256 public testxx;
+    uint256 public testxy;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
@@ -175,7 +177,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     using SafeMath2 for uint256;
     using ExtendedMath2 for uint;
     event Mint(address indexed from, uint reward_amount, uint epochCount, bytes32 newChallengeNumber);
-    event MegaMint(address indexed from, uint reward_amount, uint epochCount, bytes32 newChallengeNumber, uint NumberOfTokensMinted);
+    event MegaMint(address indexed from, uint epochCount, bytes32 newChallengeNumber, uint NumberOfTokensMinted);
 
 // Managment events
     uint256 override public totalSupply = 42000001000000000000000000;
@@ -271,35 +273,39 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		}
 
 
-	function AOpenMint(bool nonce, bool challenge_digest) public returns (bool success) {
-
-				_startNewMiningEpoch();
-
-				uint diff = block.timestamp - previousBlockTime;
-				uint x = 4;
-				if(diff  > targetTime)
-				{
-					for(x = 4; x< 10; x++){
-					if(diff <= (targetTime * x).div(3)){
-						break;
-					}}
-				}
-				uint reward = (x * reward_amount).div(4);
-
-				balances[msg.sender] = balances[msg.sender].add(reward);
-				balances[AddressLPReward] = balances[AddressLPReward].add((reward).div(2));
+	function AOpenMint(bool nonce, bool challenge_digest) public returns (uint256 success) {
 
 
-				tokensMinted = tokensMinted.add(reward);
-				previousBlockTime = block.timestamp;
-				if(give0xBTC > 0){
-				IERC20(AddressZeroXBTC).transfer(msg.sender, Token2Per*give0xBTC);
-			   }
-			   emit Mint(msg.sender, reward_amount, epochCount, challengeNumber );
-			   return true;
+		//uint diff = block.timestamp - previousBlockTime;
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888;
+		uint totalOwed = 0;
+		if(ratio < 314){
+			totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
+		}else {
+			totalOwed = (x * 100000000).div(888) + (3500000000);
+		} 
+
+
+		balances[msg.sender] = balances[msg.sender].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
+				
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(100000000 * 2));
+		previousBlockTime = block.timestamp;
+
+		if(give0xBTC > 0){
+			if(ratio < 200){
+				IERC20(AddressZeroXBTC).transfer(msg.sender, (totalOwed * Token2Per * give0xBTC).div(100000000));
+			}else{
+				IERC20(AddressZeroXBTC).transfer(msg.sender, (23 * Token2Per * give0xBTC).div(10));
+			}
 		}
 
+		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
+		return totalOwed;
+
+    }
 	function ARewardSender() public {
 		//runs every _BLOCKS_PER_READJUSTMENT / 4
 
@@ -310,13 +316,15 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		reward_amount = (150 * 10**uint(decimals)).div( 2**rewardEra );
 		uint256 x = (runsperepoch * 888) / targetTime;
+        testxx = x;
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
 		 if(ratio < 314){
 			totalOwed = (( 61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) -  291036) ;
 		 }else {
 			totalOwed = (x * 100000000).div(888) + (3500000000);
-			} 
+		} 
+        testxy = ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000);
 		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
 		{
 			give0xBTC = 1 * give;
@@ -340,47 +348,48 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 
 	//function mintTo(bool nonce, bool challenge_digest,  address mintTo) public returns (bool success) {
-	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (uit256 owed) {
+	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (uint256 owed) {
 
-				bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
+		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
-				//the challenge digest must match the expected
-				require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
+		//the challenge digest must match the expected
+		require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
 
-				//the digest must be smaller than the target
-				require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
-				_startNewMiningEpoch();
+		//the digest must be smaller than the target
+		require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
+		_startNewMiningEpoch();
 
-				require(block.timestamp > previousBlockTime, "No same second solves");
+		require(block.timestamp > previousBlockTime, "No same second solves");
 
-				//uint diff = block.timestamp - previousBlockTime;
-				uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
-				uint ratio = x * 100 / 888;
-				uint totalOwed = 0;
-				if(ratio < 314){
-					totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
-				}else {
-					totalOwed = (x * 100000000).div(888) + (3500000000);
-				} 
+		//uint diff = block.timestamp - previousBlockTime;
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888;
+		uint totalOwed = 0;
+		if(ratio < 314){
+			totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
+		}else {
+			totalOwed = (x * 100000000).div(888) + (3500000000);
+		} 
 
 
-				balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
-				balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
+		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
+		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
 				
-				tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(100000000 * 2));
-				previousBlockTime = block.timestamp;
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(100000000 * 2));
+		previousBlockTime = block.timestamp;
 
-				if(give0xBTC > 0){
-					if(ratio < 200){
-						IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000));
-					}else{
-						IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
-					}
-				}
+		if(give0xBTC > 0){
+			if(ratio < 200){
+				IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000));
+			}else{
+				IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
+			}
+		}
 
-			   emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
-			   return owed;
+		return totalOwed;
+
 	}
 
 
@@ -391,30 +400,30 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = xx * 100 / 888;
-		uint totalOwed = 0;
 
 		require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
-		for(uint x=0; x< ExtraFunds.length; x++)
+		uint xy=0;
+		for(xy = 0; xy< ExtraFunds.length; xy++)
 		{
-			if(epochCount % (2**(x+1)) != 0){
+			if(epochCount % (2**(xy+1)) != 0){
 				break;
 			}
-			require(ExtraFunds[x] != address(this) && ExtraFunds[x] != AddressZeroXBTC, "No base printing of tokens");
-			for(uint y=x+1; y< ExtraFunds.length; y++){
-				require(ExtraFunds[y] != ExtraFunds[x], "No printing The same tokens");
+			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
+			for(uint y=xy+1; y< ExtraFunds.length; y++){
+				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
 		}
-		uint256 totalOwed = mintTo(nonce,challenge_digest, MintTo[0])
-		require(totalOwed > 0), "mint issue");
-		uint x=0;
-		for(uint x=0; x<ExtraFunds.length; x++)
+
+		uint256 totalOwed = mintTo(nonce,challenge_digest, MintTo[0]);
+		require(totalOwed > 0, "mint issue");
+
+		for(uint x=0; x<xy; x++)
 		{
 			//epoch count must evenly dividable by 2^n in order to get extra mints. 
 			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, epoch 16 = 4 extra mints w/ a divRound for the 4th mint(allows small balance token minting aka NFTs)
 			if(epochCount % (2**(x+1)) == 0){
 				uint256 TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
 				if(TotalOwned != 0){
-					uint256 totalOwed = 0;
 					uint256 ratio = 100 *xx/888;
 					if( x % 3 == 0 && x != 0){
 						if(ratio < 314){
@@ -432,17 +441,19 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 							totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
 							totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500);
 						} 
-					}
-				}
-			IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
-			}
-		} 
-	
-		emit MegaMint(msg.sender, totalOwed, epochCount, challengeNumber, x );
+				    }
+			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
+			    }
+		    }else{
+                break;
+            }
+            	
+		    emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
+        }
 
 		return true;
-	}
 
+    }
 
 
 	function mintTokensSameAddress(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
@@ -459,27 +470,28 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-	function empty_mintTo(uint256 nonce, bytes32 challenge_digest) public returns (uit256 owed) {
+	function empty_mintTo(uint256 nonce, bytes32 challenge_digest) public returns (uint256 owed) {
 
-				bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
+		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
-				//the challenge digest must match the expected
-				require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
+		//the challenge digest must match the expected
+		require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
 
-				//the digest must be smaller than the target
-				require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
-				_startNewMiningEpoch();
+		//the digest must be smaller than the target
+		require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
+		_startNewMiningEpoch();
 
-				require(block.timestamp > previousBlockTime, "No same second solves");
+		require(block.timestamp > previousBlockTime, "No same second solves");
 
-				previousBlockTime = block.timestamp;
+		previousBlockTime = block.timestamp;
 
 
-			   emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
+		emit Mint(msg.sender, 0, epochCount, challengeNumber );
 
-			   return owed;
+		return 0;
 			   
 	}
+
 
 	function test(	uint256 _testx,	uint256 _testthisblk, uint256 _testlastblk ) public {
 
@@ -495,6 +507,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		} 
 		testx = totalOwed;	
 	}
+
 
 	function _startNewMiningEpoch() internal {
 
@@ -539,14 +552,12 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-
-
 	function _reAdjustDifficulty() internal {
 
 		uint256 blktimestamp = block.timestamp;
 		uint ethBlocksSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 
-		uint adjusDiffTargetTime = targetTime * epochsMined * _BLOCKS_PER_READJUSTMENT; //36 min per block 60 sec * 12
+		uint adjusDiffTargetTime = targetTime *  _BLOCKS_PER_READJUSTMENT; //36 min per block 60 sec * 12
 
 		//if there were less eth blocks passed in time than expected
 		if( ethBlocksSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
@@ -586,8 +597,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		//10.5 million rewards for Liquidity Providers
 
 
-
-
 	//help debug mining software
 	function checkMintSolution(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number, uint testTarget) public view returns (bool success) {
 		bytes32 digest = bytes32(keccak256(abi.encodePacked(challenge_number,msg.sender,nonce)));
@@ -597,7 +606,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-
 	//this is a recent ethereum block hash, used to prevent pre-mining future blocks
 	function getChallengeNumber() public view returns (bytes32) {
 
@@ -605,17 +613,20 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 	}
 
+
 	//the number of zeroes the digest of the PoW solution requires.  Auto adjusts
 	function getMiningDifficulty() public view returns (uint) {
 
 		return _MAXIMUM_TARGET.div(miningTarget);
 	}
 
+
 	function getMiningTarget() public view returns (uint) {
 
 		return miningTarget;
 
 	}
+
 
 	function getMiningMinted() public view returns (uint) {
 
@@ -642,9 +653,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-
-
-
 	//help debug mining software
 	function getMintDigest(uint256 nonce, bytes32 challenge_digest, bytes32 challenge_number) public view returns (bytes32 digesttest) {
 
@@ -653,17 +661,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		return digest;
 
 	}
-
-
-
-		// ------------------------------------------------------------------------
-
-		// Total supply
-
-		// ------------------------------------------------------------------------
-
-
-
 
 
 		// ------------------------------------------------------------------------
@@ -679,7 +676,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-
 		// ------------------------------------------------------------------------
 
 		// Transfer the balance from token owner's account to `to` account
@@ -689,6 +685,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		// - 0 value transfers are allowed
 
 		// ------------------------------------------------------------------------
+
 
 	function transfer(address to, uint tokens) public override returns (bool success) {
 
@@ -700,7 +697,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		return true;
 
 	}
-
 
 
 		// ------------------------------------------------------------------------
@@ -719,6 +715,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		// ------------------------------------------------------------------------
 
+
 	function approve(address spender, uint tokens) public override returns (bool success) {
 
 		allowed[msg.sender][spender] = tokens;
@@ -728,7 +725,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		return true;
 
 	}
-
 
 
 		// ------------------------------------------------------------------------
@@ -748,6 +744,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		// - 0 value transfers are allowed
 
 		// ------------------------------------------------------------------------
+
 
 	function transferFrom(address from, address to, uint tokens) public override returns (bool success) {
 
@@ -770,12 +767,12 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		// ------------------------------------------------------------------------
 
+
 	function allowance(address tokenOwner, address spender) public override view returns (uint remaining) {
 
 		return allowed[tokenOwner][spender];
 
 	}
-
 
 
 		// ------------------------------------------------------------------------
@@ -787,6 +784,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		// `receiveApproval(...)` is then executed
 
 		// ------------------------------------------------------------------------
+
 
 	function receiveApproval(address from, uint256 tokens, address token, bytes memory data) public override{
 
