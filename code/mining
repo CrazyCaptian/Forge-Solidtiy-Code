@@ -396,7 +396,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	//First address for mintSend(Forge + 0xBitcoin), Second address+ for other tokens
 	// REPALCE WITH LINE BELOW in production
 	//function mintTokensArrayTo(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
-	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
+	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 
 		uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = xx * 100 / 888;
@@ -415,6 +415,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		}
 
 		uint256 totalOwed = mintTo(nonce,challenge_digest, MintTo[0]);
+		uint256 tOwed = totalOwed
 		require(totalOwed > 0, "mint issue");
 
 		for(uint x=0; x<xy; x++)
@@ -444,12 +445,12 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				    }
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			    }
-            }
-        }
+            		}
+        	}
 
 		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
 
-		return true;
+		return tOwed;
 
     }
 
