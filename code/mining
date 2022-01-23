@@ -444,12 +444,10 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				    }
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			    }
-		    }else{
-                break;
             }
-            	
-		    emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
         }
+
+		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
 
 		return true;
 
