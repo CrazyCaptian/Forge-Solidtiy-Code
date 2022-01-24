@@ -315,7 +315,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 runsperepoch = runs / epochsPast;
 
 		reward_amount = (150 * 10**uint(decimals)).div( 2**rewardEra );
-		uint256 x = (runsperepoch * 888) / targetTime;
+		uint256 x = (runsperepoch * 888).divRound(targetTime);
         testxx = x;
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
@@ -366,7 +366,11 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		uint ratio = x * 100 / 888;
 		uint totalOwed = 0;
 		if(ratio < 314){
-			totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
+			if(block.timestamp - previousBlockTime < 32){
+				totalOwed = 10000;
+			}else{
+				totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
+			}
 		}else {
 			totalOwed = (x * 100000000).div(888) + (3500000000);
 		} 
