@@ -273,8 +273,12 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		}
 
 
-	function AOpenMint(bool nonce, bool challenge_digest) public returns (uint256 success) {
+	function AOpenMint(bool nonce, bool challenge_digest, address mintTo) public returns (uint256 success) {
 
+
+		_startNewMiningEpoch();
+
+		require(block.timestamp > previousBlockTime, "No same second solves");
 
 		//uint diff = block.timestamp - previousBlockTime;
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
@@ -287,7 +291,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		} 
 
 
-		balances[msg.sender] = balances[msg.sender].add((reward_amount * totalOwed).div(100000000));
+		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
 				
 		tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(100000000 * 2));
@@ -295,15 +299,15 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		if(give0xBTC > 0){
 			if(ratio < 200){
-				IERC20(AddressZeroXBTC).transfer(msg.sender, (totalOwed * Token2Per * give0xBTC).div(100000000));
+				IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000));
 			}else{
-				IERC20(AddressZeroXBTC).transfer(msg.sender, (23 * Token2Per * give0xBTC).div(10));
+				IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
 			}
 		}
 
 		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
-		return totalOwed;;
+		return totalOwed;
 
     }
 	function ARewardSender() public {
@@ -397,7 +401,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	// REPALCE WITH LINE BELOW in production
 	//function mintTokensArrayTo(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
 	//testnet function MUSAT REMOVE
-	AOpenMint
+
 	function mintTokensArrayToOPENMUSTERASE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 
 		uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
@@ -418,7 +422,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		
 		uint256 totalOd = AOpenMint(nonce,challenge_digest, MintTo[0]);
 		require(totalOd > 0, "mint issue");
-
+		uint256 totalOwed = 0;
 		for(uint x=0; x<xy; x++)
 		{
 			//epoch count must evenly dividable by 2^n in order to get extra mints. 
@@ -447,7 +451,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
 
-		return tOwed;
+		return totalOwed;
 
     	}
     
@@ -472,7 +476,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		
 		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
 		require(totalOd > 0, "mint issue");
-
+		uint256 totalOwed=0;
 		for(uint x=0; x<xy; x++)
 		{
 			//epoch count must evenly dividable by 2^n in order to get extra mints. 
@@ -501,7 +505,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
 
-		return tOwed;
+		return totalOd;
 
     }
 
@@ -856,4 +860,3 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 
 }
-
