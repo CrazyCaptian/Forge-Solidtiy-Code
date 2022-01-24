@@ -369,7 +369,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		if(ratio < 314){
 			totalOwed = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
 		}else {
-			totalOwed = (x * 100000000).div(888) + (3500000000);
+			totalOwed = (x * 100000000).div(888) + (350000000);
 		} 
 
 
@@ -429,17 +429,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				if(TotalOwned != 0){
 					uint256 ratio = 100 *xx/888;
 					if( x % 3 == 0 && x != 0){
-						if(ratio < 314){
-							totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500);
-						}else {
-							totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500);
-						}
+						totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500);
 					}else{
-						if(ratio < 314){
-							totalOwed = (TotalOwned * totalOd).div(100000000 * 2500 );
-						}else {
-							totalOwed = (TotalOwned * totalOd).div(100000000 * 2500);
-						} 
+						totalOwed = (TotalOwned * totalOd).div(100000000 * 2500 );
 				    }
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			    }
@@ -553,7 +545,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		if(ratio < 314){
 			totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
 		}else {
-			totalOwed = (x * 100000000).div(888) + (3500000000);
+			totalOwed = (x * 100000000).div(888) + (350000000);
 		} 
 		testx = totalOwed;	
 	}
