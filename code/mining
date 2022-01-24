@@ -163,7 +163,7 @@ abstract contract ApproveAndCallFallBack {
 //Main contract
 
 contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
-	uint constant public targetTime = 60 * 60;
+	uint constant public targetTime = 60 * 48;
 	uint256 public testx;
 	uint256 public  testnum;
 	uint256 public testden;
@@ -200,7 +200,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     bytes32 public challengeNumber;   //generate a new one when a new reward is minted
     uint public rewardEra = 0;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
-    uint public reward_amount = (150 * 10**uint(decimals) ).div( 2**rewardEra );
+    uint public reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
     //Stuff for Functions
     uint oldecount = 0;
     uint public previousBlockTime = block.timestamp;
@@ -315,7 +315,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 epochsPast = epochCount - oldecount; //actually epoch
 		uint256 runsperepoch = runs / epochsPast;
 
-		reward_amount = (150 * 10**uint(decimals)).div( 2**rewardEra );
+		reward_amount = (100 * 10**uint(decimals)).div( 2**rewardEra );
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
         testxx = x;
 		uint256 ratio = x * 100 / 888;
@@ -683,7 +683,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		//once we get half way thru the coins, only get 25 per block
 		//every reward era, the reward amount halves.
 
-		return (150 * 10**uint(decimals) ).div( 2**rewardEra ) ;
+		return (100 * 10**uint(decimals) ).div( 2**rewardEra ) ;
 
 		}
 
