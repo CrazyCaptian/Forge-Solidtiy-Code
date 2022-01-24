@@ -569,7 +569,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		//40 is the final reward era, almost all tokens minted
 		//once the final era is reached, more tokens will not be given out because the assert function
-		if( tokensMinted.add((reward_amount)) > maxSupplyForEra && rewardEra < 39)
+		if( tokensMinted > maxSupplyForEra && rewardEra < 39)
 		{
 			rewardEra = rewardEra + 1;
 			miningTarget = miningTarget.div(2 ** rewardEra);
