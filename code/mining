@@ -281,7 +281,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		uint ratio = x * 100 / 888;
 		uint totalOwed = 0;
 		if(ratio < 314){
-			totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
+			totalOwed = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
 		}else {
 			totalOwed = (x * 100000000).div(888) + (3500000000);
 		} 
@@ -320,7 +320,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
 		 if(ratio < 314){
-			totalOwed = (( 61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) -  291036) ;
+			totalOwed = (61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) ;
 		 }else {
 			totalOwed = (x * 100000000).div(888) + (3500000000);
 		} 
@@ -366,11 +366,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		uint ratio = x * 100 / 888;
 		uint totalOwed = 0;
 		if(ratio < 314){
-			if(block.timestamp - previousBlockTime < 32){
-				totalOwed = 10000;
-			}else{
-				totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036);
-			}
+			totalOwed = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
 		}else {
 			totalOwed = (x * 100000000).div(888) + (3500000000);
 		} 
@@ -417,10 +413,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
 		}
-
-		uint256 totalOwed = mintTo(nonce,challenge_digest, MintTo[0]);
-		uint256 tOwed = totalOwed
-		require(totalOwed > 0, "mint issue");
+		
+		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
+		require(totalOd > 0, "mint issue");
 
 		for(uint x=0; x<xy; x++)
 		{
@@ -432,19 +427,15 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 					uint256 ratio = 100 *xx/888;
 					if( x % 3 == 0 && x != 0){
 						if(ratio < 314){
-							totalOwed = (( 61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888) -  291036) ;
-							totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500 );
+							totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500);
 						}else {
-							totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
-							totalOwed = (TotalOwned * totalOwed).divRound(100000000 * 2500);
+							totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500);
 						}
 					}else{
 						if(ratio < 314){
-							totalOwed = (( 61001200 * (x ** 2 )).div(888 **2)+ (40861500 * x).div(888) -  291036);
-							totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500 );
+							totalOwed = (TotalOwned * totalOd).div(100000000 * 2500 );
 						}else {
-							totalOwed = (totalOwed * 100000000).div(888) + (3500000000);
-							totalOwed = (TotalOwned * totalOwed).div(100000000 * 2500);
+							totalOwed = (TotalOwned * totalOd).div(100000000 * 2500);
 						} 
 				    }
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
