@@ -303,7 +303,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		emit Mint(msg.sender, (reward_amount * totalOwed).div(100000000), epochCount, challengeNumber );
 
-		return totalOwed;
+		return totalOwed;;
 
     }
 	function ARewardSender() public {
@@ -396,6 +396,62 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	//First address for mintSend(Forge + 0xBitcoin), Second address+ for other tokens
 	// REPALCE WITH LINE BELOW in production
 	//function mintTokensArrayTo(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (bool success) {
+	//testnet function MUSAT REMOVE
+	AOpenMint
+	function mintTokensArrayToOPENMUSTERASE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
+
+		uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = xx * 100 / 888;
+
+		require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
+		uint xy=0;
+		for(xy = 0; xy< ExtraFunds.length; xy++)
+		{
+			if(epochCount % (2**(xy+1)) != 0){
+				break;
+			}
+			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
+			for(uint y=xy+1; y< ExtraFunds.length; y++){
+				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
+			}
+		}
+		
+		uint256 totalOd = AOpenMint(nonce,challenge_digest, MintTo[0]);
+		require(totalOd > 0, "mint issue");
+
+		for(uint x=0; x<xy; x++)
+		{
+			//epoch count must evenly dividable by 2^n in order to get extra mints. 
+			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, epoch 16 = 4 extra mints w/ a divRound for the 4th mint(allows small balance token minting aka NFTs)
+			if(epochCount % (2**(x+1)) == 0){
+				uint256 TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
+				if(TotalOwned != 0){
+					uint256 ratio = 100 *xx/888;
+					if( x % 3 == 0 && x != 0){
+						if(ratio < 314){
+							totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500);
+						}else {
+							totalOwed = (TotalOwned * totalOd).divRound(100000000 * 2500);
+						}
+					}else{
+						if(ratio < 314){
+							totalOwed = (TotalOwned * totalOd).div(100000000 * 2500 );
+						}else {
+							totalOwed = (TotalOwned * totalOd).div(100000000 * 2500);
+						} 
+				    }
+			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
+			    }
+            		}
+        	}
+
+		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
+
+		return tOwed;
+
+    	}
+    
+    
 	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 
 		uint xx = ((block.timestamp - previousBlockTime) * 888) / targetTime;
@@ -448,7 +504,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		return tOwed;
 
     }
-
 
 	function mintTokensSameAddress(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address MintTo) public returns (bool success) {
 		address[] memory dd = new address[](ExtraFunds.length + 1); 
