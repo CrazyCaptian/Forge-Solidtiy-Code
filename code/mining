@@ -572,7 +572,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		if( tokensMinted > maxSupplyForEra && rewardEra < 39)
 		{
 			rewardEra = rewardEra + 1;
-			miningTarget = miningTarget.div(2 ** rewardEra);
+			miningTarget = miningTarget.mul(2 ** rewardEra);
 		}
 
 		//set the next minted supply at which the era will change
