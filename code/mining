@@ -376,7 +376,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
 				
-		tokensMinted = tokensMinted.add((reward_amount * totalOwed * 3).div(100000000 * 2));
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 
 		if(give0xBTC > 0){
