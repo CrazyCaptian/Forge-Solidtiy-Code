@@ -320,16 +320,16 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         testxx = x;
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
-		 if(ratio < 314){
+		 if(ratio < 200){
 			totalOwed = (61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) ;
 		 }else {
-			totalOwed = (x * 100000000).div(888) + (3500000000);
+			totalOwed = (230000000);
 		} 
-        testxy = ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000);
+        	testxy = ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000);
 		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
 		{
-			give0xBTC = 1 * give;
 			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
+			give0xBTC = 1 * give;
 		}
 		else{
 			give0xBTC = 0;
