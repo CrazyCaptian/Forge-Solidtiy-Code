@@ -290,8 +290,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		balances[mintTo] = balances[mintTo].add((reward_amount * totalOwed).div(100000000));
 		balances[AddressLPReward] = balances[AddressLPReward].add((reward_amount * totalOwed).div(100000000 * 2));
-				
-		tokensMinted = tokensMinted.add((reward_amount * totalOwed * ).div(100000000));
+		tokensMinted = tokensMinted.add((reward_amount * totalOwed).div(100000000));
 		previousBlockTime = block.timestamp;
 
 		if(give0xBTC > 0){
@@ -477,10 +476,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 					}
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
-			    }
-            		}
-        	}
-
+			}
+        }
+        	
 		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
 
 		return totalOd;
@@ -551,7 +549,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		if( tokensMinted > maxSupplyForEra && rewardEra < 39)
 		{
 			rewardEra = rewardEra + 1;
-			miningTarget = miningTarget.mul(2 ** rewardEra);
+			miningTarget = miningTarget.mult(2 ** rewardEra);
 		}
 
 		//set the next minted supply at which the era will change
