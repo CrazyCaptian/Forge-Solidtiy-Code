@@ -207,7 +207,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint oneEthUnit =    1000000000000000000;
     uint one8unit   =              100000000;
     uint public Token2Per=           1000000;
-    uint Token2Min=                  1000000;
+    uint Token2Min=                       88;
     uint public tokensMinted;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
