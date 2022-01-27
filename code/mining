@@ -584,20 +584,20 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 	function _reAdjustDifficulty() internal {
 		uint256 blktimestamp = block.timestamp;
-		uint ethBlocksSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
+		uint TimeSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 
 		uint adjusDiffTargetTime = targetTime *  _BLOCKS_PER_READJUSTMENT; //36 min per block 60 sec * 12
 
 		//if there were less eth blocks passed in time than expected
-		if( ethBlocksSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
+		if( TimeSinceLastDifficultyPeriod2 < adjusDiffTargetTime )
 		{
-			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( ethBlocksSinceLastDifficultyPeriod2 );
+			uint excess_block_pct = (adjusDiffTargetTime.mult(100)).div( TimeSinceLastDifficultyPeriod2 );
 			give = 1;
 			uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
 			//make it harder 
 			miningTarget = miningTarget.sub(miningTarget.div(2000).mult(excess_block_pct_extra));   //by up to 50 %
 		}else{
-			uint shortage_block_pct = (ethBlocksSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
+			uint shortage_block_pct = (TimeSinceLastDifficultyPeriod2.mult(100)).div( adjusDiffTargetTime );
 			give = 2;
 			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
 			//make it easier
