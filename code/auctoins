@@ -359,9 +359,10 @@ contract ForgeMiningCT{
 
 
     function burn0xBTCForMember(address member, uint256 _0xbtcAmount) public returns (bool success) {
+        uint day = currentDay;
         require(IERC20(AddressZeroXBTC).transferFrom(msg.sender, AddressForgeToken, _0xbtcAmount), "NO WAY, requires 0xBTC send");
         _recordBurn(msg.sender, member, currentEra, currentDay, _0xbtcAmount);
-        emit Burn(msg.sender, member, currentEra, currentDay, _0xbtcAmount, mapEraDay_Units[currentEra][currentDay]);
+        emit Burn(msg.sender, member, currentEra, day, _0xbtcAmount, mapEraDay_Units[currentEra][currentDay]);
         
         return true;
     }
