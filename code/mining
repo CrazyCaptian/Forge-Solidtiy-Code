@@ -459,8 +459,8 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		
 		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
 		require(totalOd > 0, "mint issue");
-		uint256 totalOwed;
-		uint256 TotalOwned;
+		uint256 totalOwed = 0;
+		uint256 TotalOwned = 0;
 		for(uint x=0; x<xy; x++)
 		{
 			//epoch count must evenly dividable by 2^n in order to get extra mints. 
