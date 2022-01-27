@@ -535,6 +535,8 @@ contract ForgeMiningCT{
     }
     
     
+    //======================================EMISSION========================================//
+    
     function getEmissionShare(uint era, uint day, address member) public view returns (uint value) {
     
         uint memberUnits = mapEraDay_MemberUnits[era][day][member];                         // Get Member Units
@@ -552,7 +554,6 @@ contract ForgeMiningCT{
     
     
     
-    //======================================EMISSION========================================//
     // Internal - Update emission function
     function _updateEmission() private {
         uint _now = block.timestamp;                                                                    // Find now()
