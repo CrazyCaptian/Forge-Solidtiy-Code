@@ -478,10 +478,17 @@ contract ForgeMiningCT{
     //Withdraws All days in era for member
     function WithdrawlsDays(uint _era, uint[] memory fdays, address _member) public returns (bool success)
     {
+    
         uint256 stricttotal = 0;
         for(uint256 x = 0; x < fdays.length; x++)
         {
-            stricttotal = stricttotal.add( _processWithdrawalRETURNSVAL (_era, fdays[x], _member) );
+            if (_era < currentEra) {                                                                          // Allow if in previous Era
+                stricttotal = stricttotal.add( _processWithdrawalRETURNSVAL (_era, fdays[x], _member) );      // Process Withdrawal
+            } else if (_era == currentEra) {                                                                  // Handle if in current Era
+                if (_day < currentDay) {                                                                      // Allow only if in previous Day
+                    stricttotal = stricttotal.add( _processWithdrawalRETURNSVAL (_era, fdays[x], _member) );  // Process Withdrawal
+                }
+            } 
         }
         IERC20(AddressForgeToken).transfer(_member, stricttotal);
         emit MegaWithdrawal(msg.sender, _member, _era, fdays.length, stricttotal);
