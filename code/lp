@@ -465,7 +465,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 	
 
     function exit() external {
-        getReward();
+        getRewardFor(msg.sender);
         withdraw(uint128(balanceOf(msg.sender)));
 		
     }
@@ -559,45 +559,45 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     }
 
  
-    function getReward() public updateReward(msg.sender) {
-        uint256 reward = earned(msg.sender);
-        uint256 reward2 = earned2(msg.sender);
-        uint256 reward3= earned3(msg.sender);
+    function getRewardFor(address claimFor) public updateReward(claimFor) {
+        uint256 reward = earned(claimFor);
+        uint256 reward2 = earned2(claimFor);
+        uint256 reward3= earned3(claimFor);
         if (reward > 0) {
-            userRewards[msg.sender].rewards = 0;
+            userRewards[claimFor].rewards = 0;
             if(reward3 > 0){
-                userRewards3[msg.sender].rewards3 = 0;
-                address payable receiver = payable(msg.sender);
+                userRewards3[claimFor].rewards3 = 0;
+                address payable receiver = payable(claimFor);
 	            require(receiver.send(reward3), "Eth transfer failed");
                 totalRewarded3 = totalRewarded3 - reward3;
             }
-            require(rewardToken.transfer(msg.sender, reward), "reward transfer failed");
+            require(rewardToken.transfer(claimFor, reward), "reward transfer failed");
             totalRewarded = totalRewarded - reward;
         }
         if(reward2 > 0)
         {
             
-            userRewards2[msg.sender].rewards2 = 0;
-            require(rewardToken2.transfer(msg.sender, reward2), "reward token 2 transfer failed");
+            userRewards2[claimFor].rewards2 = 0;
+            require(rewardToken2.transfer(claimFor, reward2), "reward token 2 transfer failed");
             totalRewarded2 = totalRewarded2 - reward2;
         }
         uint256 rewardExtra = earnedExtra(msg.sender);
         if (rewardExtra > 0) {
-            userRewardsExtra[msg.sender].rewardsExtra = 0;
-            require(rewardTokenExtra.transfer(msg.sender, rewardExtra), "reward transfer failed");
+            userRewardsExtra[claimFor].rewardsExtra = 0;
+            require(rewardTokenExtra.transfer(claimFor, rewardExtra), "reward transfer failed");
             totalRewardedExtra = totalRewardedExtra - rewardExtra;
 	    
         }
-        uint256 rewardExtraExtra = earnedExtraExtra(msg.sender);
+        uint256 rewardExtraExtra = earnedExtraExtra(claimFor);
         if(rewardExtraExtra > 0)
         {
             
-            userRewardsExtraExtra[msg.sender].rewardsExtraExtra = 0;
-            require(rewardTokenExtraExtra.transfer(msg.sender, rewardExtraExtra), "reward token 2 transfer failed");
+            userRewardsExtraExtra[claimFor].rewardsExtraExtra = 0;
+            require(rewardTokenExtraExtra.transfer(claimFor, rewardExtraExtra), "reward token 2 transfer failed");
             totalRewardedExtra = totalRewardedExtraExtra - rewardExtraExtra;
         }
         
-            emit RewardPaid(msg.sender, reward, reward2, reward3, rewardExtra, rewardExtraExtra);
+            emit RewardPaid(claimFor, reward, reward2, reward3, rewardExtra, rewardExtraExtra);
 			
     }
  
