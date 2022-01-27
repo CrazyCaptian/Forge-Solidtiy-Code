@@ -583,7 +583,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 
 	function _reAdjustDifficulty() internal {
-		latestDifficultyPeriodStarted = block.number;
 		uint256 blktimestamp = block.timestamp;
 		uint ethBlocksSinceLastDifficultyPeriod2 = blktimestamp - latestDifficultyPeriodStarted2;
 
@@ -606,7 +605,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		}
 
 		latestDifficultyPeriodStarted2 = blktimestamp;
-
+		latestDifficultyPeriodStarted = block.number;
 		if(miningTarget < _MINIMUM_TARGET) //very difficult
 		{
 			miningTarget = _MINIMUM_TARGET;
@@ -615,6 +614,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		{
 			miningTarget = _MAXIMUM_TARGET;
 		}
+		
 	}
 
 
