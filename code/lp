@@ -10,7 +10,7 @@
 //
 //Rewards: Forge, 0xBitcoin, and Polygon currently.
 // Funds gathered will be dispered over 21 days. 21 Day reward period
-//Room to Expand to two other cryptocurrencies(only admin in everything! This feature will be decentralized)
+//Room to Expand to three other cryptocurrencies(Only admin function in all three contracts is to add up to three more cryptocurrencies!)
 
 pragma solidity ^0.8.7;
 
