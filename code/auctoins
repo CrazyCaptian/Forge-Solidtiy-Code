@@ -469,7 +469,7 @@ contract ForgeMiningCT{
              WithdrawlsDays(y, dd, _member);
         }
         
-        ZmapMember_DayClaimedTo[_member] = currentDay;
+        ZmapMember_DayClaimedTo[_member] = maxDay;
         ZmapMember_DayClaimedTo[_member] = currentEra;
         
     }
