@@ -241,8 +241,8 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     event RewardAddedExtraExtra(uint256 rewardsExtraExtra);
     event RewardPaidExtraExtra(address indexed userExtraExtra, uint256 rewardsExtraExtra);
 
-    constructor(IERC20 _reward0xPW, IERC20 _LP, IERC20 _reward0xBTC) {
-        rewardToken = _reward0xPW;
+    constructor(IERC20 _rewardForge, IERC20 _LP, IERC20 _reward0xBTC) {
+        rewardToken = _rewardForge;
         stakedToken = _LP;
         rewardToken2 = _reward0xBTC;
     }
@@ -254,12 +254,6 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 	}
 	
 	
-	function z_SETPARAMS(IERC20 _reward0xPW, IERC20 _LP, IERC20 _reward0xBTC) external OnlyModerators returns (bool success){
-        rewardToken = _reward0xPW;
-        stakedToken = _LP;
-        rewardToken2 = _reward0xBTC;
-        return true;
-	}
 
 
     function Z_addNewToken(IERC20 tokenExtra, uint _decimalsExtra) external OnlyModerators returns (bool success){
