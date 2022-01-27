@@ -169,6 +169,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	uint256 public testden;
     uint256 public testxx;
     uint256 public testxy;
+    uint256 public multipler = 1;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
@@ -563,7 +564,8 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
 			{
-				if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= 20000) //chosen to give keep 250 days payouts in reserve at current payout
+				multipler = (IERC20(AddressZeroXBTC).balanceOf(address(this)) / 2000 * 10 ** 18)
+				if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= (20000 + 5000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
 					{
