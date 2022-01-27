@@ -200,7 +200,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     bytes32 public challengeNumber;   //generate a new one when a new reward is minted
     uint public rewardEra = 0;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
-    uint public reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
+    uint public reward_amount = 0;
     //Stuff for Functions
     uint oldecount = 0;
     uint public previousBlockTime = block.timestamp;
@@ -218,7 +218,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     string public name = "Forge";
     string public constant symbol = "Forge";
     uint8 public constant decimals = 18;
-    uint public totalLifetimes = 0;
 
     uint256 lastrun = block.timestamp;
     uint public latestDifficultyPeriodStarted = block.number;
@@ -228,13 +227,13 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         // Only init once
         assert(!inited);
         inited = true;
-	
+	reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
     	rewardEra = 0;
 	tokensMinted = 0;
+	epochCount = 0;
     	miningTarget = _MAXIMUM_TARGET.div(30005); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
-	
         // Init contract variables and mint
         balances[AuctionAddress2] = x;
 	
