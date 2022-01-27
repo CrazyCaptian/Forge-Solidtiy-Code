@@ -517,14 +517,14 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
 //0 = Reward1 and Reward2, 1 = Reward1, 2 = Reward2, 3 = Reward3, 4 = RewardExtra, 5 = RewardExtraExtra
 function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
-        uint256 reward = earned(msg.sender);
-        uint256 reward2 = earned2(msg.sender);
         //Reward & Reward2 aka 1 and 2
         if(choice == 0){
+	    uint256 reward = earned(msg.sender);
+            uint256 reward2 = earned2(msg.sender);
             if (reward > 0) {
-            userRewards[msg.sender].rewards = 0;
-            require(rewardToken.transfer(msg.sender, reward), "reward transfer failed");
-            totalRewarded = totalRewarded - reward;
+            	userRewards[msg.sender].rewards = 0;
+           	 require(rewardToken.transfer(msg.sender, reward), "reward transfer failed");
+            	totalRewarded = totalRewarded - reward;
             }
             if(reward2 > 0){
                 userRewards2[msg.sender].rewards2 = 0;
@@ -534,6 +534,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
            emit RewardPaidBasic(msg.sender, reward, reward2);
 		   
         }else if(choice == 2){
+            uint256 reward2 = earned2(msg.sender);
             if(reward2 > 0){
                userRewards2[msg.sender].rewards2 = 0;
               require(rewardToken2.transfer(msg.sender, reward2), "reward token 2 transfer failed");
@@ -542,29 +543,31 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
            emit RewardPaidBasic(msg.sender, 0, reward2);
 		   
         }else if(choice == 1){
-               if (reward > 0){
-                   userRewards[msg.sender].rewards = 0;
-                    require(rewardToken.transfer(msg.sender, reward), "reward transfer failed");
-                  totalRewarded = totalRewarded - reward;
-                }
-		    emit RewardPaidBasic(msg.sender, reward, 0);
+	    uint256 reward = earned(msg.sender);
+            if (reward > 0){
+               userRewards[msg.sender].rewards = 0;
+               require(rewardToken.transfer(msg.sender, reward), "reward transfer failed");
+               totalRewarded = totalRewarded - reward;
+            }
+	    emit RewardPaidBasic(msg.sender, reward, 0);
 			
         }else if(choice == 3){
-                    uint256 reward3= earned3(msg.sender);
-                    if(reward3 > 0){
-                userRewards3[msg.sender].rewards3 = 0;
-                address payable receiver = payable(msg.sender);
-	            require(receiver.send(reward3), "Eth transfer failed");
-                totalRewarded3 = totalRewarded3 - reward3;
-		emit RewardPaid3(msg.sender, reward3);
-                }
-         }else if(choice == 4){
+	    uint256 reward3= earned3(msg.sender);
+	    if(reward3 > 0){
+		userRewards3[msg.sender].rewards3 = 0;
+		address payable receiver = payable(msg.sender);
+		require(receiver.send(reward3), "Eth transfer failed");
+		totalRewarded3 = totalRewarded3 - reward3;
+	    }
+	    emit RewardPaid3(msg.sender, reward3);
+
+        }else if(choice == 4){
             uint256 rewardExtra = earnedExtra(msg.sender);
             if (rewardExtra > 0){
                 userRewardsExtra[msg.sender].rewardsExtra = 0;
                 require(rewardTokenExtra.transfer(msg.sender, rewardExtra), "reward transfer failed");
                totalRewardedExtra = totalRewardedExtra - rewardExtra;
-        	}
+       	    }
             emit RewardPaidExtra(msg.sender, rewardExtra);
 			
         }else if(choice == 5){
@@ -575,7 +578,8 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
                 require(rewardTokenExtraExtra.transfer(msg.sender, rewardExtraExtra), "reward token 2 transfer failed");
                 totalRewardedExtraExtra = totalRewardedExtraExtra - rewardExtraExtra;
             }
-            emit RewardPaidExtraExtra(msg.sender, rewardExtraExtra);	
+            emit RewardPaidExtraExtra(msg.sender, rewardExtraExtra);
+	    
         }else if(choice == 6){
             uint256 rewardExtraExtra2 = earnedExtraExtra2(msg.sender);
             if(rewardExtraExtra > 0)
@@ -619,7 +623,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             totalRewardedExtra = totalRewardedExtra - rewardExtra;
 	    
         }
-        uint256 rewardExtraExtra = earnedExtraExtra(claimFor);
+        uint256 rewardExtraExtra = earnedExtraExtra(msg.sender);
         if(rewardExtraExtra > 0)
         {
             
@@ -628,7 +632,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             totalRewardedExtraExtra = totalRewardedExtraExtra - rewardExtraExtra;
         }
 	
-        uint256 rewardExtraExtra2 = earnedExtraExtra2(claimFor);
+        uint256 rewardExtraExtra2 = earnedExtraExtra2(msg.sender);
         if(rewardExtraExtra2 > 0)
         {
             
