@@ -255,13 +255,11 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     	require( _rewardT >= 60*60*24 && _rewardT <= 60*60*24*62, "Reward must stay within boundaries");
 	    poolLength = _rewardT;
 	}
-	
-	
 
 
     function Z_addNewToken(IERC20 tokenExtra, uint _decimalsExtra) external OnlyModerators returns (bool success){
     	require(tokenExtra != rewardToken && tokenExtra != stakedToken && tokenExtra != rewardToken2 && tokenExtra != rewardTokenExtraExtra && tokenExtra != rewardTokenExtra, "no same token");
-	    require(AddTokenTimeout > 60*60*24*188, "must wait 188 days between adding tokens");
+	    require((block.timestamp - AddTokenTimeout) > 60*60*24*188, "must wait 188 days between adding tokens");
         AddTokenTimeout = block.timestamp;
         decimalsExtra = _decimalsExtra;
         rewardRateExtra = 0;
@@ -277,7 +275,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
     function Z_addNewToken2(IERC20 tokenTWOExtra, uint _decimalsExtraExtra) external OnlyModerators returns (bool success){
 	    require(tokenTWOExtra != rewardToken && tokenTWOExtra != stakedToken && tokenTWOExtra != rewardToken2 && tokenTWOExtra != rewardTokenExtra && tokenTWOExtra != rewardTokenExtraExtra, "no same token");
-	    require(AddToken2Timeout > 60*60*24*188, "must wait 188 days between adding tokens");
+	    require((block.timestamp - AddToken2Timeout) > 60*60*24*188, "must wait 188 days between adding tokens");
         AddToken2Timeout = block.timestamp;
         decimalsExtraExtra = _decimalsExtraExtra;
         rewardRateExtraExtra = 0;
@@ -475,7 +473,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     function Z_Reset4() internal OnlyModerators returns (bool success){
 	uint256 maxlength = AddressesEntered.length;
 	
-        for(uint x=0; x <= maxlength; x++)
+        for(uint x=0; x < maxlength; x++)
         {
 	    userRewardsExtra[AddressesEntered[x]].rewardsExtra = 0;
             userRewardsExtra[AddressesEntered[x]].userRewardPerTokenPaidExtra = 0;
@@ -486,7 +484,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
     function Z_Reset5() internal OnlyModerators returns (bool success){
 	uint256 maxlength = AddressesEntered.length;
-        for(uint x=0; x <= maxlength; x++)
+        for(uint x=0; x < maxlength; x++)
         {
             userRewardsExtraExtra[AddressesEntered[x]].rewardsExtraExtra = 0;
             userRewardsExtraExtra[AddressesEntered[x]].userRewardPerTokenPaidExtraExtra = 0;
