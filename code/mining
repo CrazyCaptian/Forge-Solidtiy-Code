@@ -543,12 +543,11 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 
 		//if max supply for the era will be exceeded next reward round then enter the new era before that happens
-
-		//40 is the final reward era, almost all tokens minted
-		if( tokensMinted > maxSupplyForEra)
+		//59 is the final reward era, almost all tokens minted
+		if( tokensMinted.add(reward_amount) > maxSupplyForEra && rewardEra < 60)
 		{
 			rewardEra = rewardEra + 1;
-			miningTarget = miningTarget.mult(2 ** rewardEra);
+			maxSupplyForEra = _totalSupply - _totalSupply.div( 2**(rewardEra + 1));
 		}
 
 		//set the next minted supply at which the era will change
