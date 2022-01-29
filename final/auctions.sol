@@ -332,7 +332,6 @@ contract ForgeMiningCT{
     {
         uint256 stricttotal =0;
         uint256 _daysPerEra=daysPerEra;
-        uint _currentDay = currentDay;
         uint _currentEra = currentEra; 
         require(_era >= currentEra, "no knucklehead only bid on this era");
         for(uint256 x = 0; x < fdays.length; x++)
@@ -340,7 +339,7 @@ contract ForgeMiningCT{
             uint256 dayamt = _0xbtcAmount[x];
             if(_era == _currentEra)
             {
-                require(fdays[x] >= _currentDay, "Must not bid behind the days");
+                require(fdays[x] >= currentDay, "Must not bid behind the days");
             }
             require(fdays[x] <= _daysPerEra, "Cant bid on days not in era");
             stricttotal = stricttotal.add(dayamt);
