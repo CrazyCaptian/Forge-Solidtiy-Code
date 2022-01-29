@@ -1,5 +1,5 @@
 // Forge - Proof of Work Mining Contract
-
+// MUST REMOVE AOPENMINT
 // Distrubtion of Forge Token is as follows:
 // 25% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use 0xBitcoin to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
 // +
@@ -10,8 +10,7 @@
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
 // All distributions happen fairly using Bitcoins model of distribution for over 100+ years, on-chain, decentralized, trustless, ownerless contracts!
-//  !!!!!! The harder it is mined the less tokens that are awarded !!!!!!!
-//
+//   The harder it is mined the less tokens that are awarded.
 // Network: Polygon Chain 
 // ChainID = 89
 //
@@ -260,7 +259,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	///
 	// Managment
 	///
-	//MUST REMOVE MUST REMOVE
 
 
 	function zinit2(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
