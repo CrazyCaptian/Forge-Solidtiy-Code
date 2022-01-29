@@ -441,9 +441,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     
     
 	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
-
-		
-
 		require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
 		uint xy=0;
 		for(xy = 0; xy< ExtraFunds.length; xy++)
