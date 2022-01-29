@@ -313,15 +313,15 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
         lastUpdateTime2 = lastTimeRewardApplicable2();
         lastUpdateTime3 = lastTimeRewardApplicable3();
         lastUpdateTimeExtra = lastTimeRewardApplicableExtra();
-        lastUpdateTimeExtra = lastTimeRewardApplicableExtraExtra();
-        lastUpdateTimeExtra = lastTimeRewardApplicableExtraExtra2();
+        lastUpdateTimeExtraExtra = lastTimeRewardApplicableExtraExtra();
+        lastUpdateTimeExtraExtra2 = lastTimeRewardApplicableExtraExtra2();
 	
         rewardPerTokenStored = _rewardPerTokenStored;
         rewardPerTokenStored2 = _rewardPerTokenStored2;
         rewardPerTokenStored3 = _rewardPerTokenStored3;
         rewardPerTokenStoredExtra = _rewardPerTokenStoredExtra;
         rewardPerTokenStoredExtraExtra = _rewardPerTokenStoredExtraExtra;
-        rewardPerTokenStoredExtraExtra = _rewardPerTokenStoredExtraExtra2;
+        rewardPerTokenStoredExtraExtra2 = _rewardPerTokenStoredExtraExtra2;
 	
         userRewards[account].rewards = earned(account);
         userRewards2[account].rewards2 = earned2(account);
@@ -335,7 +335,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
         userRewards3[account].userRewardPerTokenPaid3 = _rewardPerTokenStored3;
         userRewardsExtra[account].userRewardPerTokenPaidExtra = _rewardPerTokenStoredExtra;
         userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra = _rewardPerTokenStoredExtraExtra;
-        userRewardsExtraExtra[account].userRewardPerTokenPaidExtraExtra = _rewardPerTokenStoredExtraExtra2;
+        userRewardsExtraExtra2[account].userRewardPerTokenPaidExtraExtra2 = _rewardPerTokenStoredExtraExtra2;
         _;
     }
 
@@ -649,15 +649,17 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     function Z_setRewardParamsExtraExtra2(uint256 reward, uint64 duration) external {
         unchecked {
             require(reward > 0);
-            duration = poolLength;  // Updates every 14 days
+            duration = poolLength;  
             rewardPerTokenStoredExtraExtra2 = rewardPerTokenExtraExtra2();
             uint64 blockTimestamp = uint64(block.timestamp);
             require(blockTimestamp > periodFinishExtraExtra2, "MUST BE AFTER Previous Distribution ");
+	    
             uint256 maxRewardSupply = rewardTokenExtraExtra2.balanceOf(address(this)) - totalRewardedExtraExtra2;
-            
             uint256 remaining = blockTimestamp - periodFinishExtraExtra2;
-            if(rewardTokenExtraExtra2 == stakedToken)
+	    
+            if(rewardTokenExtraExtra2 == stakedToken){
                 maxRewardSupply -= totalSupply;
+	    }
             if(maxRewardSupply > duration)
             {
                 rewardRateExtraExtra2 = ((maxRewardSupply*4)/10)/duration;
@@ -680,15 +682,16 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     function Z_setRewardParamsExtraExtra(uint256 reward, uint64 duration) external {
         unchecked {
             require(reward > 0);
-            duration = poolLength;  // Updates every 14 days
+            duration = poolLength;  
             rewardPerTokenStoredExtraExtra = rewardPerTokenExtraExtra();
             uint64 blockTimestamp = uint64(block.timestamp);
             require(blockTimestamp > periodFinishExtraExtra, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardTokenExtraExtra.balanceOf(address(this)) - totalRewardedExtraExtra;
             
             uint256 remaining = blockTimestamp - periodFinishExtraExtra;
-            if(rewardTokenExtraExtra == stakedToken)
+            if(rewardTokenExtraExtra == stakedToken){
                 maxRewardSupply -= totalSupply;
+	    }
             if(maxRewardSupply > duration)
             {
                 rewardRateExtraExtra = ((maxRewardSupply*4)/10)/duration;
@@ -712,15 +715,16 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     function Z_setRewardParamsExtra(uint256 reward, uint64 duration) external {
         unchecked {
             require(reward > 0);
-            duration = poolLength;  // Updates every 14 days
+            duration = poolLength; 
             rewardPerTokenStoredExtra = rewardPerTokenExtra();
             uint64 blockTimestamp = uint64(block.timestamp);
             require(blockTimestamp > periodFinishExtra, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardTokenExtra.balanceOf(address(this)) - totalRewardedExtra;
             
             uint256 remaining = blockTimestamp - periodFinishExtra;
-            if(rewardTokenExtra == stakedToken)
+            if(rewardTokenExtra == stakedToken){
                 maxRewardSupply -= totalSupply;
+	    }
             if(maxRewardSupply > duration)
             {
                 rewardRateExtra = ((maxRewardSupply*4)/10)/duration;
@@ -765,15 +769,16 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     function Z_setRewardParamsForge(uint256 reward, uint64 duration) external {
         unchecked {
             require(reward > 0);
-            duration = poolLength;  // Updates every 14 days
+            duration = poolLength; 
             rewardPerTokenStored = rewardPerToken();
             uint64 blockTimestamp = uint64(block.timestamp);
             require(blockTimestamp > periodFinish, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardToken.balanceOf(address(this)) - totalRewarded;
             
             uint256 remaining = blockTimestamp - periodFinish;
-            if(rewardToken == stakedToken)
+            if(rewardToken == stakedToken){
                 maxRewardSupply -= totalSupply;
+	    }
             if(maxRewardSupply > duration)
             {
                 rewardRate = ((maxRewardSupply*4)/10)/duration;
@@ -794,7 +799,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     function Z_setRewardParams0xBTC(uint256 reward, uint64 duration) external {
         unchecked {
             require(reward > 0);
-            duration = poolLength;  // Updates every 14 days
+            duration = poolLength;  
             rewardPerTokenStored2 = rewardPerToken2();
             uint64 blockTimestamp = uint64(block.timestamp);
             require(blockTimestamp > periodFinish2, "MUST BE AFTER Previous Rewards");
@@ -803,7 +808,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             uint256 remaining = blockTimestamp - periodFinish2;
             if(rewardToken2 == stakedToken){
                 maxRewardSupply2 -= totalSupply;
-			}
+	    }
             if(maxRewardSupply2 > reward)
             {
                 rewardRate2 = ((maxRewardSupply2*4)/10)/duration;
@@ -823,7 +828,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     function Z_setRewardParamsETH(uint256 reward, uint64 duration) external {
         unchecked {
             require(reward > 0);
-            duration = poolLength;  // Updates every 14 days
+            duration = poolLength;  
             rewardPerTokenStored3 = rewardPerToken3();
             uint64 blockTimestamp = uint64(block.timestamp);
             require(blockTimestamp > periodFinish3, "MUST BE AFTER Previous Rewards");
