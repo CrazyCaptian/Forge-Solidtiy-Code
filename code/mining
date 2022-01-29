@@ -428,7 +428,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 					}else{
 						totalOwed = (TotalOwned * totalIN).div(100000000 * 2500 );
 				    }
-			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
+			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
 			    }
             		}
         	}
@@ -474,9 +474,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 						totalOwed = (TotalOwned * totalOd).div(100000000 * 2500 );
 					}
 				}
-			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
+			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
 			}
-        }
+        	}
         	
 		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
 
@@ -499,8 +499,21 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-	function empty_mintTo(uint256 nonce, bytes32 challenge_digest) public returns (uint256 owed) {
+	function empty_mintTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 
+		require(MintTo.length == ExtraFunds.length,"So MintTo has to have same number of addressses as ExtraFunds");
+		uint xy=0;
+		for(xy = 0; xy< ExtraFunds.length; xy++)
+		{
+			if(epochCount % (2**(xy+1)) != 0){
+				break;
+			}
+			require(ExtraFunds[xy] != address(this) && ExtraFunds[xy] != AddressZeroXBTC, "No base printing of tokens");
+			for(uint y=xy+1; y< ExtraFunds.length; y++){
+				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
+			}
+		}
+		
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
 		//the challenge digest must match the expected
@@ -514,10 +527,34 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		previousBlockTime = block.timestamp;
 
+		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
+		uint ratio = x * 100 / 888;
+		uint totalIN = 0;
+		if(ratio < 314){
+			totalIN = (61001200 * (x ** 2 )).div(888 ** 2)+ (40861500 * x).div(888);
+		}else {
+			totalIN = (x * 100000000).div(888) + (350000000);
+		} 
+		require(totalIN > 0, "mint issue");
+		uint256 totalOwed;
+		uint256 TotalOwned;
+		for(uint x=0; x<xy; x++)
+		{
+			//epoch count must evenly dividable by 2^n in order to get extra mints. 
+			//ex. epoch 2 = 1 extramint, epoch 4 = 2 extra, epoch 8 = 3 extra mints, epoch 16 = 4 extra mints w/ a divRound for the 4th mint(allows small balance token minting aka NFTs)
+			if(epochCount % (2**(x+1)) == 0){
+				TotalOwned = IERC20(ExtraFunds[x]).balanceOf(address(this));
+				if(TotalOwned != 0){
+					if( x % 3 == 0 && x != 0){
+						totalOwed = (TotalOwned * totalIN).divRound(100000000 * 2500);
+					}else{
+						totalOwed = (TotalOwned * totalIN).div(100000000 * 2500 );
+				    }
+			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
+			    }
+            		}
+        	}
 
-		emit Mint(msg.sender, 0, epochCount, challengeNumber );
-
-		return 0;
 			   
 	}
 
