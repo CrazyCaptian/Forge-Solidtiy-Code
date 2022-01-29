@@ -212,7 +212,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint public tokensMinted;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
-    //mapping(address => uint) Token_balances;
     uint give0xBTC = 0;
     uint give = 1;
     // metadata
@@ -224,7 +223,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint public latestDifficultyPeriodStarted = block.number;
     bool inited = false;
     function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
-        uint x = 21000000000000000000000000 / (2* (2 ** totalLifetimes)); //half supply for LP Mine and Burn
+        uint x = 21000000000000000000000000; 
         // Only init once
         assert(!inited);
         inited = true;
