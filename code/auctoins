@@ -223,8 +223,6 @@ contract ForgeMiningCT{
     event BurnMultipleDays(address indexed payer, address indexed member, uint era, uint NumberOfDays, uint totalUnits);
   
     event Withdrawal(address indexed caller, address indexed member, uint era, uint day, uint value, uint vetherRemaining);
-    //ProofofWorkStuff
-    
     event MegaWithdrawal(address indexed caller, address indexed member, uint era, uint TotalDays, uint256 stricttotal);
     uint256 public lastMinted = 0;
     //=====================================CREATION=========================================//
