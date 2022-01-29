@@ -614,19 +614,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		challengeNumber = blockhash(block.number - 1);
 	}
-function changediff() public {
-		_reAdjustDifficulty();
-
-
-}
-
-function changeTime(uint256 timestamp) public {
-		
-		latestDifficultyPeriodStarted2 = timestamp;
-
-
-}
-
+	
 
 	function _reAdjustDifficulty() internal {
 		uint256 blktimestamp = block.timestamp;
