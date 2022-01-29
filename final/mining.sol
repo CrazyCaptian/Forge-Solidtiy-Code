@@ -46,7 +46,7 @@
 // Credits: 0xBitcoin, Vether, Synethix
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.11;
 
 contract Ownable {
     address public owner;
