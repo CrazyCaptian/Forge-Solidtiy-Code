@@ -178,7 +178,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     using SafeMath2 for uint256;
     using ExtendedMath2 for uint;
     event Mint(address indexed from, uint reward_amount, uint epochCount, bytes32 newChallengeNumber);
-    event MegaMint(address indexed from, uint epochCount, bytes32 newChallengeNumber, uint NumberOfTokensMinted);
+    event MegaMint(address indexed from, uint epochCount, bytes32 newChallengeNumber, uint NumberOfTokensMinted, uint256 TokenMultipler);
 
 // Managment events
     uint256 override public totalSupply = 42000001000000000000000000;
@@ -228,11 +228,11 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         // Only init once
         assert(!inited);
         inited = true;
-	previousBlockTime = block.timestamp
-	reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
+		previousBlockTime = block.timestamp;
+		reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
     	rewardEra = 0;
-	tokensMinted = 0;
-	epochCount = 0;
+		tokensMinted = 0;
+		epochCount = 0;
     	miningTarget = _MAXIMUM_TARGET.div(30005); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
@@ -401,7 +401,11 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 	function mintTokensArrayToOPENMUSTERASE(bool nonce, bool challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
 
-		require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
+
+		uint256 totalIN = AOpenMint(nonce,challenge_digest, MintTo[0]);
+		require(totalIN > 0, "mint issue");
+
+		require(MintTo.length == ExtraFunds.length + 1, "MintTo has to have an extra address compared to ExtraFunds");
 		uint xy=0;
 		for(xy = 0; xy< ExtraFunds.length; xy++)
 		{
@@ -414,8 +418,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 			}
 		}
 		
-		uint256 totalIN = AOpenMint(nonce,challenge_digest, MintTo[0]);
-		require(totalIN > 0, "mint issue");
 		uint256 totalOwed;
 		uint256 TotalOwned;
 		for(uint x=0; x<xy; x++)
@@ -435,7 +437,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
             		}
         	}
 
-		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
+		emit MegaMint(msg.sender, epochCount, challengeNumber, xy, totalIN );
 
 		return totalOwed;
 
@@ -443,7 +445,10 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     
     
 	function mintTokensArrayTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
-		require(MintTo.length == ExtraFunds.length + 1,"So MintTo has to have same number of addressses as ExtraFunds");
+		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
+		require(totalOd > 0, "mint issue");
+
+		require(MintTo.length == ExtraFunds.length + 1,"MintTo has to have an extra address compared to ExtraFunds");
 		uint xy=0;
 		for(xy = 0; xy< ExtraFunds.length; xy++)
 		{
@@ -456,8 +461,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 			}
 		}
 		
-		uint256 totalOd = mintTo(nonce,challenge_digest, MintTo[0]);
-		require(totalOd > 0, "mint issue");
 		uint256 totalOwed = 0;
 		uint256 TotalOwned = 0;
 		for(uint x=0; x<xy; x++)
@@ -475,9 +478,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				}
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x+1], totalOwed);
 			}
-        	}
+        }
         	
-		emit MegaMint(msg.sender, epochCount, challengeNumber, xy );
+		emit MegaMint(msg.sender, epochCount, challengeNumber, xy, totalOd );
 
 		return totalOd;
 
@@ -499,8 +502,17 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 
 	function empty_mintTo(uint256 nonce, bytes32 challenge_digest, address[] memory ExtraFunds, address[] memory MintTo) public returns (uint256 owed) {
+		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
 
-		require(MintTo.length == ExtraFunds.length,"So MintTo has to have same number of addressses as ExtraFunds");
+		//the challenge digest must match the expected
+		require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
+
+		//the digest must be smaller than the target
+		require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
+		_startNewMiningEpoch();
+
+		require(block.timestamp > previousBlockTime, "No same second solves");
+		require(MintTo.length == ExtraFunds.length,"MintTo has to have same number of addressses as ExtraFunds");
 		uint xy=0;
 		for(xy = 0; xy< ExtraFunds.length; xy++)
 		{
@@ -512,19 +524,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				require(ExtraFunds[y] != ExtraFunds[xy], "No printing The same tokens");
 			}
 		}
-		
-		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
-
-		//the challenge digest must match the expected
-		require(digest == challenge_digest, "Old challenge_digest or wrong challenge_digest");
-
-		//the digest must be smaller than the target
-		require(uint256(digest) < miningTarget, "Digest must be smaller than miningTarget");
-		_startNewMiningEpoch();
-
-		require(block.timestamp > previousBlockTime, "No same second solves");
-
-		previousBlockTime = block.timestamp;
 
 		uint256 x = ((block.timestamp - previousBlockTime) * 888) / targetTime;
 		uint ratio = x * 100 / 888;
@@ -551,9 +550,10 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 				    }
 			    IERC20(ExtraFunds[x]).transfer(MintTo[x], totalOwed);
 			    }
-            		}
-        	}
+            }
+        }
 
+		previousBlockTime = block.timestamp;
 		return totalIN;   
 	}
 
@@ -598,7 +598,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
 			{
-				multipler = (IERC20(AddressZeroXBTC).balanceOf(address(this)) / 2000 * 10 ** 8)
+				multipler = (IERC20(AddressZeroXBTC).balanceOf(address(this)) / 2000 * 10 ** 8);
 				if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= (10000 + 10000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
