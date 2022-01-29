@@ -483,7 +483,7 @@ contract ForgeMiningCT{
             if (_era < currentEra) {                                                                          // Allow if in previous Era
                 stricttotal = stricttotal.add( _processWithdrawalRETURNSVAL (_era, fdays[x], _member) );      // Process Withdrawal
             } else if (_era == currentEra) {                                                                  // Handle if in current Era
-                if (_day < currentDay) {                                                                      // Allow only if in previous Day
+                if (fdays[x] < currentDay) {                                                                      // Allow only if in previous Day
                     stricttotal = stricttotal.add( _processWithdrawalRETURNSVAL (_era, fdays[x], _member) );  // Process Withdrawal
                 }
             } 
