@@ -11,7 +11,7 @@
 //       0xBitcoin Token is taken from the user and used to recieve your share of the 8,192 tokens auctioned every ~4 days
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.11;
 
 contract Ownabled {
     address public owner22;
