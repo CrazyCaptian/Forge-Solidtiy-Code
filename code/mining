@@ -555,7 +555,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
             		}
         	}
 
-			   
+		return totalIN;   
 	}
 
 
