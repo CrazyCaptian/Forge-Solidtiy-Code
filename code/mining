@@ -635,7 +635,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 			give = 2;
 			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
 			//make it easier
-			miningTarget = miningTarget.add(miningTarget.div(1000).mult(shortage_block_pct_extra));   //by up to 100 %
+			miningTarget = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 % make it quicker to adjust down
 		}
 
 		latestDifficultyPeriodStarted2 = blktimestamp;
