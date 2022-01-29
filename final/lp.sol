@@ -12,7 +12,7 @@
 // Funds gathered will be dispered over 21 days. 21 Day reward period
 //Room to Expand to three other cryptocurrencies(Only admin function in all three contracts is to add up to three more cryptocurrencies!)
 
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.11;
 
 /**
  * @dev Contract module which provides a basic access control mechanism, where
