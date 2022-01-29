@@ -16,7 +16,7 @@
 //
 //
 // Name: Forge
-// Symbol: Frg
+// Symbol: Forge
 // Decimals: 18 
 //
 // Total supply: 42,000,001.000000000000000000
@@ -202,6 +202,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint public rewardEra = 0;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
     uint public reward_amount = 0;
+    
     //Stuff for Functions
     uint oldecount = 0;
     uint public previousBlockTime = block.timestamp;
@@ -227,6 +228,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         // Only init once
         assert(!inited);
         inited = true;
+	previousBlockTime = block.timestamp
 	reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
     	rewardEra = 0;
 	tokensMinted = 0;
