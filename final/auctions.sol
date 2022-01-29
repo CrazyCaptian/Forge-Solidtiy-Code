@@ -232,7 +232,7 @@ contract ForgeMiningCT{
         name = "Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
-        daysPerEra = 600; secondsPerDay = 20;//60*60*24*3; 
+        daysPerEra = 600; secondsPerDay = 60*60*24*3; 
         totalBurnt = 0;
         totalEmitted = 0;
         nextDayTime = block.timestamp + secondsPerDay;
