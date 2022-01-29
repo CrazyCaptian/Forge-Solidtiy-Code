@@ -237,7 +237,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     event RewardPaid(address indexed user, uint256 reward, uint256 rewards2, uint256 rewards3, uint256 rewardsExtra, uint256 rewardsExtraExtra, uint256 rewardsExtraExtra2);
 
     event RewardAdded(uint256 reward);
-    event RewardAdded2(uint256 rewards2);;
+    event RewardAdded2(uint256 rewards2);
     event RewardPaidBasic(address indexed user, uint256 reward1, uint256 rewards2);
 
     event RewardAdded3(uint256 rewards3);
@@ -582,7 +582,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 	    
         }else if(choice == 6){
             uint256 rewardExtraExtra2 = earnedExtraExtra2(msg.sender);
-            if(rewardExtraExtra > 0)
+            if(rewardExtraExtra2 > 0)
             {
             	userRewardsExtraExtra2[msg.sender].rewardsExtraExtra2 = 0;
                 require(rewardTokenExtraExtra2.transfer(msg.sender, rewardExtraExtra2), "reward token 2 transfer failed");
@@ -754,11 +754,11 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             this.Z_setRewardParamsExtraExtra(3, 33);
             this.Z_setRewardParamsExtra(3, 33);
         }
-	if(choise == 3){
+	    if(choice == 3){
             this.Z_setRewardParamsExtraExtra2(3, 33);
             this.Z_setRewardParamsExtraExtra(3, 33);
             this.Z_setRewardParamsExtra(3, 33);
-	}
+	    }
     }
 
 
