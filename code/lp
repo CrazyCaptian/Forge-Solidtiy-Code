@@ -652,7 +652,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             duration = poolLength;  // Updates every 14 days
             rewardPerTokenStoredExtraExtra2 = rewardPerTokenExtraExtra2();
             uint64 blockTimestamp = uint64(block.timestamp);
-            require(blockTimestamp > (periodFinishExtraExtra2 + (duration*4) / (3)), "Claim period allows for withdrawal period before claims change 1/3 # of days");
+            require(blockTimestamp > periodFinishExtraExtra2, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardTokenExtraExtra2.balanceOf(address(this)) - totalRewardedExtraExtra2;
             
             uint256 remaining = blockTimestamp - periodFinishExtraExtra2;
@@ -669,7 +669,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 
             lastUpdateTimeExtraExtra2 = blockTimestamp;
             periodFinishExtraExtra2 = blockTimestamp+duration;
-            totalRewardedExtraExtra2 = reward + totalRewarded;
+            totalRewardedExtraExtra2 = reward + totalRewardedExtraExtra2;
 			
             emit RewardAdded6(reward);
 			
@@ -683,7 +683,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             duration = poolLength;  // Updates every 14 days
             rewardPerTokenStoredExtraExtra = rewardPerTokenExtraExtra();
             uint64 blockTimestamp = uint64(block.timestamp);
-            require(blockTimestamp > (periodFinishExtraExtra + (duration*4) / (3)), "Claim period allows for withdrawal period before claims change 1/3 # of days");
+            require(blockTimestamp > periodFinishExtraExtra, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardTokenExtraExtra.balanceOf(address(this)) - totalRewardedExtraExtra;
             
             uint256 remaining = blockTimestamp - periodFinishExtraExtra;
@@ -700,7 +700,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 
             lastUpdateTimeExtraExtra = blockTimestamp;
             periodFinishExtraExtra = blockTimestamp+duration;
-            totalRewardedExtraExtra = reward + totalRewarded;
+            totalRewardedExtraExtra = reward + totalRewardedExtraExtra;
 			
             emit RewardAdded5(reward);
 			
@@ -715,7 +715,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             duration = poolLength;  // Updates every 14 days
             rewardPerTokenStoredExtra = rewardPerTokenExtra();
             uint64 blockTimestamp = uint64(block.timestamp);
-            require(blockTimestamp > (periodFinishExtra + (duration*4) / (3)), "Claim period allows for withdrawal period before claims change 1/3 # of days");
+            require(blockTimestamp > periodFinishExtra, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardTokenExtra.balanceOf(address(this)) - totalRewardedExtra;
             
             uint256 remaining = blockTimestamp - periodFinishExtra;
@@ -731,7 +731,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             reward = (maxRewardSupply*4)/10;
             lastUpdateTimeExtra = blockTimestamp;
             periodFinishExtra = blockTimestamp+duration;
-            totalRewardedExtra = reward + totalRewarded;
+            totalRewardedExtra = reward + totalRewardedExtra;
 			
             emit RewardAdded4(reward);
 			
