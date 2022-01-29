@@ -232,7 +232,7 @@ contract ForgeMiningCT{
         name = "Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
-        daysPerEra = 600; secondsPerDay = //60*60*24*3; 
+        daysPerEra = 600; secondsPerDay = 20;//60*60*24*3; 
         totalBurnt = 0;
         totalEmitted = 0;
         nextDayTime = block.timestamp + secondsPerDay;
@@ -333,6 +333,7 @@ contract ForgeMiningCT{
         uint256 stricttotal =0;
         uint256 _daysPerEra=daysPerEra;
         uint _currentEra = currentEra; 
+        uint _currentday = currentDay; 
         require(_era >= currentEra, "no knucklehead only bid on this era");
         for(uint256 x = 0; x < fdays.length; x++)
         {
@@ -554,7 +555,7 @@ contract ForgeMiningCT{
     // Internal - Update emission function
     function _updateEmission() private {
         uint _now = block.timestamp;                                                                    // Find now()
-        if (_now >= nextDayTime) {                                                          // If time passed the next Day time
+        if (_now > nextDayTime) {                                                          // If time passed the next Day time
             if (currentDay >= daysPerEra) {                                                 // If time passed the next Era time
                 currentEra += 1; currentDay = 0;                                            // Increment Era, reset Day
                 emission = getNextEraEmission();                                            // Get correct emission
@@ -597,7 +598,7 @@ contract ForgeMiningCT{
     
     
     function z_transferERC20TokenToMinerContract(address tokenAddress, uint tokens) public returns (bool success) {
-        require((tokenAddress != ZeroxBTCAddress && tokenAddress != AddressForgeToken);
+        require(tokenAddress != AddressZeroXBTC && tokenAddress != AddressForgeToken);
         
         return IERC20(tokenAddress).transfer(AddressForgeToken, IERC20(tokenAddress).balanceOf(address(this))); 
     }
