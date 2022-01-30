@@ -237,9 +237,9 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
         // Init contract variables and mint
-        balances[AuctionAddress2] = x;
+        balances[AuctionAddress2] = x/2;
 	
-        emit Transfer(address(0), AuctionAddress2, x);
+        emit Transfer(address(0), AuctionAddress2, x/2);
 	
     	AddressAuction = AuctionAddress2;
         AddressLPReward = payable(LPGuild2);
