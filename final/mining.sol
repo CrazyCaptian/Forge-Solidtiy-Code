@@ -164,7 +164,7 @@ abstract contract ApproveAndCallFallBack {
 
 contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	uint constant public targetTime = 60 * 48;
-    uint256 public multipler = 1;
+    uint public multipler = 1;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
@@ -255,13 +255,10 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	// Managment
 	///
 
-
 	function zinit2(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
-
 			AddressAuction = AuctionAddress2;
 			AddressLPReward = payable(LPGuild2);
 			AddressZeroXBTC = _ZeroXBTCAddress;
-
 		}
 
 
@@ -275,7 +272,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		reward_amount = (100 * 10**uint(decimals)).div( 2**rewardEra );
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
-        	testxx = x;
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
 		 if(ratio < 200){
@@ -283,7 +279,6 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 		 }else {
 			totalOwed = (230000000);
 		} 
-        	testxy = ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000);
 		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
 		{
 			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
@@ -298,8 +293,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	}
 
 
-	//Mints to the payee Forge, 0xBitcoin always to the sender. Making it the heaviest currency in here.
-	//
+	//comability function
 	function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
 		mintTo(nonce, challenge_digest, msg.sender);
 	}
