@@ -263,7 +263,7 @@ contract ForgeMiningCT{
         if(epochsMined != 0)
         {
         uint expected = emission * 4 * 2;
-        if( diff < expected )
+        if( diff > expected )
         {
             uint excess_block_pct = (expected.mult(100)).div( diff );
 
