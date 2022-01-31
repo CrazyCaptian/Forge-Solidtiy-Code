@@ -260,34 +260,32 @@ contract ForgeMiningCT{
         uint tokensMinted = ForgeMiningToken.getMiningMinted();
       
         uint diff = tokensMinted - lastMinted;
-        if(epochsMined != 0)
-        {
-        uint expected = emission * 4 * 2;
-        if( diff > expected )
+        expected = emission.mult(8);
+        if( diff < expected )
         {
             uint excess_block_pct = (expected.mult(100)).div( diff );
-
             uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
+            
             // If there were 5% more blocks mined than expected then this is 5.  If there were 100% more blocks mined than expected then this is 100.
             //make it longer since we are not mining enough
-            secondsPerDay = secondsPerDay.add(secondsPerDay.mult(excess_block_pct_extra).div(2000));   //by up to 50 %
+            
+            secondsPerDay = secondsPerDay.add(secondsPerDay.mult(excess_block_pct_extra).div(1000));   //by up to 100 %
         }else{
-            uint shortage_block_pct = (diff.mult(100)).div( expected );
+             uint shortage_block_pct = (diff.mult(100)).div( expected );
+             uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
 
-            uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
-
-            //make it shorter since we are mining too many
-            secondsPerDay = secondsPerDay.sub(secondsPerDay.mult(shortage_block_pct_extra).div(2000));   //by up to 50 %
+             //make it shorter since we are mining too many
+             secondsPerDay = secondsPerDay.sub(secondsPerDay.mult(shortage_block_pct_extra).div(2000));   //by up to 50 %
         }
-        
+
        if(secondsPerDay <= 5)
        {
-           secondsPerDay == 10;
+           secondsPerDay = 10;
        }
-       
        if(secondsPerDay > 60 * 60 * 48 * 128)
        {
            secondsPerDay = 60 * 24 * 60 * 31;
+       
        }
            lastMinted = tokensMinted;
            
