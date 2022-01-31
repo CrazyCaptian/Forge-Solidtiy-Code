@@ -1,5 +1,5 @@
 // Forge - Proof of Work Mining Contract
-// MUST REMOVE AOPENMINT
+//
 // Distrubtion of Forge Token is as follows:
 // 25% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use 0xBitcoin to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
 // +
@@ -193,7 +193,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint public  _MAXIMUM_TARGET = 2**234;
     uint public miningTarget = _MAXIMUM_TARGET.div(200000000000*25);  //1000 million difficulty to start until i enable mining
     
-    bytes32 public challengeNumber;   //generate a new one when a new reward is minted
+    bytes32 public challengeNumber= blockhash(block.number - 1);   //generate a new one when a new reward is minted
     uint public rewardEra = 0;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
     uint public reward_amount = 0;
@@ -228,7 +228,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     	rewardEra = 0;
 	tokensMinted = 0;
 	epochCount = 0;
-    	miningTarget = _MAXIMUM_TARGET.div(30005); //5000000 = 31gh/s @ 7 min for FPGA mining
+    	miningTarget = _MAXIMUM_TARGET.div(1); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
         // Init contract variables and mint
@@ -753,6 +753,4 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 		revert();
 	}
-
-
 }
