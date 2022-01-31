@@ -153,8 +153,6 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     bool activated6 = false;
     bool activated5 = false;
     bool activated4 = false;
-    uint256 AddToken2Timeout = block.timestamp;
-    uint256 AddTokenTimeout = block.timestamp;
     uint256 public decimalsExtra=18;
     uint256 public decimalsExtraExtra=18;
     uint256 public decimalsExtraExtra2=18;
