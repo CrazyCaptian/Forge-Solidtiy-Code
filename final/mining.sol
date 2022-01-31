@@ -164,11 +164,6 @@ abstract contract ApproveAndCallFallBack {
 
 contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 	uint constant public targetTime = 60 * 48;
-	uint256 public testx;
-	uint256 public  testnum;
-	uint256 public testden;
-    uint256 public testxx;
-    uint256 public testxy;
     uint256 public multipler = 1;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
@@ -228,11 +223,11 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
         // Only init once
         assert(!inited);
         inited = true;
-		previousBlockTime = block.timestamp;
-		reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
+	previousBlockTime = block.timestamp;
+	reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
     	rewardEra = 0;
-		tokensMinted = 0;
-		epochCount = 0;
+	tokensMinted = 0;
+	epochCount = 0;
     	miningTarget = _MAXIMUM_TARGET.div(30005); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
@@ -305,13 +300,11 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 	//Mints to the payee Forge, 0xBitcoin always to the sender. Making it the heaviest currency in here.
 	//
-	//function mint(bool nonce, bool challenge_digest) public returns (bool success) {
 	function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
 		mintTo(nonce, challenge_digest, msg.sender);
 	}
 
 
-	//function mintTo(bool nonce, bool challenge_digest,  address mintTo) public returns (bool success) {
 	function mintTo(uint256 nonce, bytes32 challenge_digest,  address mintTo) public returns (uint256 owed) {
 
 		bytes32 digest =  keccak256(abi.encodePacked(challengeNumber, msg.sender, nonce));
@@ -533,7 +526,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 			give = 2;
 			uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
 			//make it easier
-			miningTarget = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 100 %
+			miningTarget = miningTarget.add(miningTarget.div(500).mult(shortage_block_pct_extra));   //by up to 200 %
 		}
 
 		latestDifficultyPeriodStarted2 = blktimestamp;
