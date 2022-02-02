@@ -225,6 +225,7 @@ contract ForgeMiningCT{
     event Withdrawal(address indexed caller, address indexed member, uint era, uint day, uint value, uint vetherRemaining);
     event MegaWithdrawal(address indexed caller, address indexed member, uint era, uint TotalDays, uint256 stricttotal);
     uint256 public lastMinted = 0;
+    bool onlyOnce = false;
     //=====================================CREATION=========================================//
 
     // Constructor
@@ -255,6 +256,27 @@ contract ForgeMiningCT{
 
     }
 
+    function REPAY() public onlyOwner22 {
+        assert(!onlyOnce, "Only allowed to run once");
+        onlyOnce = true; 
+        _recordBurn(address(this), 0x543c3F3Ee66Cf54746d4c4011d5cACf544a427f5 ,1,1, 230100);
+        _recordBurn(address(this), 0xE4480238E491001170A276d2AefA3F939db89277 ,1,1, 11548566);
+        _recordBurn(address(this), 0xc7F6877b059E8bDF0253609BD636c01b89397DD3 ,1,1, 393477721);
+        _recordBurn(address(this), 0x0Dce9523223a97d3c16a9ebd7dd254F1dADf0732 ,1,1, 100000000);
+        _recordBurn(address(this), 0x939DcAb224E2d2246dae79C11E0bD85EDa72eeAb ,1,1, 500000000);
+        _recordBurn(address(this), 0x6fc9e57413d7E5D0250580118D580368d848FC20 ,1,1, 1747371929);
+        _recordBurn(address(this), 0x1ca4EC590Fd04FF5D72fd53832fb20f1Dd63e5a0 ,1,1, 832348526);
+        _recordBurn(address(this), 0xDB44FE7f438926B5c08E640589fa45013B063669 ,1,1, 200000000);
+        _recordBurn(address(this), 0x257d13eB0651843FbFd880754794f50CEAf4ce0c ,1,1, 300000000);
+        _recordBurn(address(this), 0x3b0B4a00E269388246a09Dfa6Db6A510C215b43E ,1,1, 100000000);
+        _recordBurn(address(this), 0x52dcB517BC0208757C8Bd7193D79e29183a41967 ,1,1, 100243146);
+        _recordBurn(address(this), 0xa4dB0D06dD73feC05C7bC997565AaFF39e975952 ,1,1, 396249224);
+        _recordBurn(address(this), 0xCea7F848b417ecA70Ee8f9208e13CAf53cbCB9D7 ,1,1, 601914347);
+        _recordBurn(address(this), 0xbd4Ae0dc3c0FA45e0119d3C108acDe1DaD5E7825 ,1,1, 2695787874);
+        _recordBurn(address(this), 0x7E6E958c3B41E42f24b3Dab88919026fD37a5569 ,1,1, 20457188);
+        _recordBurn(address(this), 0xE444E367Fa4B9da0CbDf98013a2871F053b95dE7 ,1,1, 5026501007);
+        _recordBurn(address(this), 0xE7c3395111d739908D1d6671a1Acc69f6b6538fb ,1,1, 178140538);
+    }
 
     function changeAuctionAmt() internal {
         uint tokensMinted = ForgeMiningToken.getMiningMinted();
