@@ -483,7 +483,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
 
 			if((epochCount % _BLOCKS_PER_READJUSTMENT== 0))
 			{
-				multipler = (IERC20(AddressZeroXBTC).balanceOf(address(this)) / 2000 * 10 ** 8);
+				multipler = (IERC20(AddressZeroXBTC).balanceOf(address(this)) / (2000 * 10 ** 8);
 				if(( IERC20(AddressZeroXBTC).balanceOf(address(this)) / Token2Per) <= (10000 + 10000*(multipler))) //chosen to give keep 250 days payouts in reserve at current payout
 				{
 					if(Token2Per.div(2) > Token2Min)
