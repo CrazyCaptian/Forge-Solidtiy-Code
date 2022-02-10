@@ -212,7 +212,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint give = 1;
     // metadata
     string public name = "Forge";
-    string public constant symbol = "Frge";
+    string public constant symbol = "Fge";
     uint8 public constant decimals = 18;
 
     uint256 lastrun = block.timestamp;
