@@ -275,7 +275,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     }
 
 
-    function Z_NewRewardTime( uint64 _rewardT) external OnlyOwner returns (bool success){
+    function Z_NewRewardTime( uint64 _rewardT) external onlyOwner returns (bool success){
     	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*1050, "Reward must stay within boundaries");
 	    poolLength = _rewardT;
 	}
@@ -379,7 +379,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
 
     function lastTimeRewardApplicable2() public view returns (uint256) {
-        uint256 blockTimestamp = uint2565(block.timestamp);
+        uint256 blockTimestamp = uint256(block.timestamp);
         return blockTimestamp < periodFinish2 ? blockTimestamp : periodFinish2;
     }
 
