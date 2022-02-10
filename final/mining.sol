@@ -278,7 +278,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		 if(ratio < 200){
 			totalOwed = (61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) ;
 		 }else {
-			totalOwed = (230000000);
+			totalOwed = (340000000);
 		} 
 		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
 		{
@@ -334,7 +334,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 			if(ratio < 200){
 				IERC20(AddressZeroXBTC).transfer(mintTo, (totalOwed * Token2Per * give0xBTC).div(100000000));
 			}else{
-				IERC20(AddressZeroXBTC).transfer(mintTo, (23 * Token2Per * give0xBTC).div(10));
+				IERC20(AddressZeroXBTC).transfer(mintTo, (34 * Token2Per * give0xBTC).div(10));
 			}
 		}
 
