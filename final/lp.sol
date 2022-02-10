@@ -276,7 +276,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
 
     function Z_NewRewardTime( uint64 _rewardT) external OnlyModerators returns (bool success){
-    	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*62, "Reward must stay within boundaries");
+    	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*3000, "Reward must stay within boundaries");
 	    poolLength = _rewardT;
 	}
 
@@ -315,10 +315,10 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
         return true;
     }
         
-    function Z_addNewToken3(IERC20 tokenTWOExtra3, uint _decimalsExtraExtra3) external OnlyModerators returns (bool success){
-	require(tokenTWOExtra2 != tokenTWOExtra3 && tokenTWOExtra3 != rewardToken && tokenTWOExtra3 != stakedToken && tokenTWOExtra3 != rewardToken2 && tokenTWOExtra3 != rewardTokenExtra && tokenTWOExtra3 != rewardTokenExtraExtra && tokenTWOExtra3 != rewardTokenExtraExtra2, "no same token");
+    function Z_addNewToken4(IERC20 tokenTWOExtra3, uint _decimalsExtraExtra3) external OnlyModerators returns (bool success){
+	require(rewardTokenExtraExtra2 != tokenTWOExtra3 && tokenTWOExtra3 != rewardToken && tokenTWOExtra3 != stakedToken && tokenTWOExtra3 != rewardToken2 && tokenTWOExtra3 != rewardTokenExtra && tokenTWOExtra3 != rewardTokenExtraExtra && tokenTWOExtra3 != rewardTokenExtraExtra2, "no same token");
 	require(!activated7, "Only allowed to add one token");
-        decimalsExtraExtra3 = _decimalsExtraExtra3;sssssssssssssssssssssssssssssss
+        decimalsExtraExtra3 = _decimalsExtraExtra3;
         rewardRateExtraExtra3 = 0;
         rewardTokenExtraExtra3 = tokenTWOExtra3;
         activated7 = true;
@@ -410,7 +410,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 	
     function lastTimeRewardApplicableExtraExtra3() public view returns (uint64) {
         uint64 blockTimestamp = uint64(block.timestamp);
-        return blockTimestamp < periodFinishExtraExtra23 ? blockTimestamp : periodFinishExtraExtra3;
+        return blockTimestamp < periodFinishExtraExtra3 ? blockTimestamp : periodFinishExtraExtra3;
     }
 	
     function rewardPerToken() public view returns (uint256) {
@@ -889,16 +889,23 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
         if(choice == 1)
         {
             this.Z_setRewardParamsExtra(3, 33);
-        }
-        if(choice == 2){
+        }else if(choice == 2){
             this.Z_setRewardParamsExtraExtra(3, 33);
             this.Z_setRewardParamsExtra(3, 33);
-        }
-	    if(choice == 3){
+        }else if(choice == 3){
             this.Z_setRewardParamsExtraExtra2(3, 33);
             this.Z_setRewardParamsExtraExtra(3, 33);
             this.Z_setRewardParamsExtra(3, 33);
-	    }
+	    }else if(choice == 4){
+            this.Z_setRewardParamsExtraExtra3(3, 33);
+            this.Z_setRewardParamsExtraExtra2(3, 33);
+            this.Z_setRewardParamsExtraExtra(3, 33);
+            this.Z_setRewardParamsExtra(3, 33);
+        }else{
+            this.Z_setRewardParamsForge(2, 22);
+            this.Z_setRewardParams0xBTC(2, 22);
+            this.Z_setRewardParamsETH(2, 22);
+        }
     }
 
 
