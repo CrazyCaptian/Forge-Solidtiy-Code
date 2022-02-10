@@ -180,20 +180,20 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     uint256 public rewardRateExtraExtra;
     uint256 public rewardRateExtraExtra2;
     uint256 public rewardRateExtraExtra3;
-    uint64 public periodFinish;
-    uint64 public periodFinish2;
-    uint64 public periodFinish3;
-    uint64 public periodFinishExtra;
-    uint64 public periodFinishExtraExtra;
-    uint64 public periodFinishExtraExtra2;
-    uint64 public periodFinishExtraExtra3;
-    uint64 public lastUpdateTime;
-    uint64 public lastUpdateTime2;
-    uint64 public lastUpdateTime3;
-    uint64 public lastUpdateTimeExtra;
-    uint64 public lastUpdateTimeExtraExtra;
-    uint64 public lastUpdateTimeExtraExtra2;
-    uint64 public lastUpdateTimeExtraExtra3;
+    uint256 public periodFinish;
+    uint256 public periodFinish2;
+    uint256 public periodFinish3;
+    uint256 public periodFinishExtra;
+    uint256 public periodFinishExtraExtra;
+    uint256 public periodFinishExtraExtra2;
+    uint256 public periodFinishExtraExtra3;
+    uint256 public lastUpdateTime;
+    uint256 public lastUpdateTime2;
+    uint256 public lastUpdateTime3;
+    uint256 public lastUpdateTimeExtra;
+    uint256 public lastUpdateTimeExtraExtra;
+    uint256 public lastUpdateTimeExtraExtra2;
+    uint256 public lastUpdateTimeExtraExtra3;
 
     uint256 public rewardPerTokenStored;
     uint256 public rewardPerTokenStored2;
@@ -372,44 +372,44 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
 
 	//admin set up a new token
-    function lastTimeRewardApplicable() public view returns (uint64) {
-        uint64 blockTimestamp = uint64(block.timestamp);
+    function lastTimeRewardApplicable() public view returns (uint256) {
+        uint256 blockTimestamp = uint256(block.timestamp);
         return blockTimestamp < periodFinish ? blockTimestamp : periodFinish;
     }
 
 
-    function lastTimeRewardApplicable2() public view returns (uint64) {
-        uint64 blockTimestamp = uint64(block.timestamp);
+    function lastTimeRewardApplicable2() public view returns (uint256) {
+        uint256 blockTimestamp = uint2565(block.timestamp);
         return blockTimestamp < periodFinish2 ? blockTimestamp : periodFinish2;
     }
 
 
-    function lastTimeRewardApplicable3() public view returns (uint64) {
-        uint64 blockTimestamp = uint64(block.timestamp);
+    function lastTimeRewardApplicable3() public view returns (uint256) {
+        uint256 blockTimestamp = uint256(block.timestamp);
         return blockTimestamp < periodFinish3 ? blockTimestamp : periodFinish3;
     }
 
 
-    function lastTimeRewardApplicableExtra() public view returns (uint64) {
-        uint64 blockTimestamp = uint64(block.timestamp);
+    function lastTimeRewardApplicableExtra() public view returns (uint256) {
+        uint256 blockTimestamp = uint256(block.timestamp);
         return blockTimestamp < periodFinishExtra ? blockTimestamp : periodFinishExtra;
     }
 
 
-    function lastTimeRewardApplicableExtraExtra() public view returns (uint64) {
-        uint64 blockTimestamp = uint64(block.timestamp);
+    function lastTimeRewardApplicableExtraExtra() public view returns (uint256) {
+        uint256 blockTimestamp = uint256(block.timestamp);
         return blockTimestamp < periodFinishExtraExtra ? blockTimestamp : periodFinishExtraExtra;
     }
 	
 
-    function lastTimeRewardApplicableExtraExtra2() public view returns (uint64) {
-        uint64 blockTimestamp = uint64(block.timestamp);
+    function lastTimeRewardApplicableExtraExtra2() public view returns (uint256) {
+        uint256 blockTimestamp = uint256(block.timestamp);
         return blockTimestamp < periodFinishExtraExtra2 ? blockTimestamp : periodFinishExtraExtra2;
     }
 	
 	
-    function lastTimeRewardApplicableExtraExtra3() public view returns (uint64) {
-        uint64 blockTimestamp = uint64(block.timestamp);
+    function lastTimeRewardApplicableExtraExtra3() public view returns (uint256) {
+        uint256 blockTimestamp = uint256(block.timestamp);
         return blockTimestamp < periodFinishExtraExtra3 ? blockTimestamp : periodFinishExtraExtra3;
     }
 	
