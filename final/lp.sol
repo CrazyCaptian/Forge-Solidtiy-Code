@@ -276,7 +276,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
 
     function Z_NewRewardTime( uint64 _rewardT) external OnlyModerators returns (bool success){
-    	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*777, "Reward must stay within boundaries");
+    	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*93, "Reward must stay within boundaries");
 	    poolLength = _rewardT;
 	}
 
