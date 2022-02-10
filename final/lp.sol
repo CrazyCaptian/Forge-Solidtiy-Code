@@ -875,21 +875,13 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
     }
 }
 
+
 /*
-   ____            __   __        __   _
-  / __/__ __ ___  / /_ / /  ___  / /_ (_)__ __
- _\ \ / // // _ \/ __// _ \/ -_)/ __// / \ \ /
-/___/ \_, //_//_/\__//_//_/\__/ \__//_/ /_\_\
-     /___/
-* Synthetix: YFIRewards.sol
-*
-* Docs: https://docs.synthetix.io/
-*
 *
 * MIT License
 * ===========
 *
-* Copyright (c) 2020 Synthetix
+* Copyright (c) 2022 Forge
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
