@@ -5,7 +5,7 @@
 //
 //  10,500,000 Forge tokens are Auctioned off over 100 years in this contract! In the first era ~5,000,000 are auctioned and half every era after!
 //
-//  Distributes 8,192 Forge tokens every 3-6 days for the first era(5 years) and halves every era after
+//  Distributes 8,192 Forge tokens every 4-12 days for the first era(5 years) and halves the amount of Forge every era after
 //
 // By using the burn0xBTCForMember function
 //       0xBitcoin Token is taken from the user and used to recieve your share of the 8,192 tokens auctioned every ~4 days
