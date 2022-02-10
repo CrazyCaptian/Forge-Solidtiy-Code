@@ -162,7 +162,7 @@ abstract contract ApproveAndCallFallBack {
 
 //Main contract
 
-contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
+contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 	uint constant public targetTime = 60 * 48;
     uint public multipler = 1;
 // SUPPORTING CONTRACTS
@@ -212,7 +212,7 @@ contract ForgeMining is Ownable, IERC20, ApproveAndCallFallBack {
     uint give = 1;
     // metadata
     string public name = "Forge";
-    string public constant symbol = "Forge";
+    string public constant symbol = "Frge";
     uint8 public constant decimals = 18;
 
     uint256 lastrun = block.timestamp;
