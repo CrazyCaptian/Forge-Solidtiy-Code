@@ -9,7 +9,7 @@
 
 //
 //Rewards: Forge, 0xBitcoin, and Polygon currently.
-// Funds gathered will be dispered over 21 days. 21 Day reward period
+// Funds gathered will be dispered over 21 days. 7 Day reward period for 40%.
 //Room to Expand to three other cryptocurrencies(Only admin function in all three contracts is to add up to three more cryptocurrencies!)
 
 pragma solidity ^0.8.11;
@@ -276,7 +276,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
 
     function Z_NewRewardTime( uint64 _rewardT) external OnlyModerators returns (bool success){
-    	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*3000, "Reward must stay within boundaries");
+    	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*777, "Reward must stay within boundaries");
 	    poolLength = _rewardT;
 	}
 
