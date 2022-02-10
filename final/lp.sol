@@ -748,8 +748,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(rewardTokenExtraExtra3.transfer(msg.sender, rewardExtraExtra3), "reward token 2 transfer failed");
             totalRewardedExtraExtra3 = totalRewardedExtraExtra3 - rewardExtraExtra3;
         }
-        
-            emit RewardPaid(msg.sender, reward, reward2, reward3, rewardExtra, rewardExtraExtra, rewardExtraExtra2, rewardExtraExtra3);
+        emit RewardPaid(msg.sender, reward, reward2, reward3, rewardExtra, rewardExtraExtra, rewardExtraExtra2, rewardExtraExtra3);
 			
     }
  
@@ -759,7 +758,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(reward > 0);
             duration = poolLength;  
             rewardPerTokenStoredExtraExtra2 = rewardPerTokenExtraExtra2();
-            uint64 blockTimestamp = uint64(block.timestamp);
+            uint256 blockTimestamp = uint256(block.timestamp);
             require(blockTimestamp > periodFinishExtraExtra2, "MUST BE AFTER Previous Distribution ");
 	    
             uint256 maxRewardSupply = rewardTokenExtraExtra2.balanceOf(address(this)) - totalRewardedExtraExtra2;
@@ -790,7 +789,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(reward > 0);
             duration = poolLength;  
             rewardPerTokenStoredExtraExtra3 = rewardPerTokenExtraExtra3();
-            uint64 blockTimestamp = uint64(block.timestamp);
+            uint256 blockTimestamp = uint256(block.timestamp);
             require(blockTimestamp > periodFinishExtraExtra3, "MUST BE AFTER Previous Distribution ");
 	    
             uint256 maxRewardSupply = rewardTokenExtraExtra3.balanceOf(address(this)) - totalRewardedExtraExtra3;
@@ -822,7 +821,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(reward > 0);
             duration = poolLength;  
             rewardPerTokenStoredExtraExtra = rewardPerTokenExtraExtra();
-            uint64 blockTimestamp = uint64(block.timestamp);
+            uint256 blockTimestamp = uint256(block.timestamp);
             require(blockTimestamp > periodFinishExtraExtra, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardTokenExtraExtra.balanceOf(address(this)) - totalRewardedExtraExtra;
             
@@ -854,7 +853,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(reward > 0);
             duration = poolLength; 
             rewardPerTokenStoredExtra = rewardPerTokenExtra();
-            uint64 blockTimestamp = uint64(block.timestamp);
+            uint256 blockTimestamp = uint256(block.timestamp);
             require(blockTimestamp > periodFinishExtra, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardTokenExtra.balanceOf(address(this)) - totalRewardedExtra;
             
@@ -883,9 +882,6 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
 
 
     function setRewardParamsALL(uint choice) external {
-        this.Z_setRewardParamsForge(2, 22);
-        this.Z_setRewardParams0xBTC(2, 22);
-        this.Z_setRewardParamsETH(2, 22);
         if(choice == 1)
         {
             this.Z_setRewardParamsExtra(3, 33);
@@ -896,7 +892,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             this.Z_setRewardParamsExtraExtra2(3, 33);
             this.Z_setRewardParamsExtraExtra(3, 33);
             this.Z_setRewardParamsExtra(3, 33);
-	    }else if(choice == 4){
+	}else if(choice == 4){
             this.Z_setRewardParamsExtraExtra3(3, 33);
             this.Z_setRewardParamsExtraExtra2(3, 33);
             this.Z_setRewardParamsExtraExtra(3, 33);
@@ -914,7 +910,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(reward > 0);
             duration = poolLength; 
             rewardPerTokenStored = rewardPerToken();
-            uint64 blockTimestamp = uint64(block.timestamp);
+            uint256 blockTimestamp = uint256(block.timestamp);
             require(blockTimestamp > periodFinish, "MUST BE AFTER Previous Distribution ");
             uint256 maxRewardSupply = rewardToken.balanceOf(address(this)) - totalRewarded;
             
@@ -943,7 +939,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(reward > 0);
             duration = poolLength;  
             rewardPerTokenStored2 = rewardPerToken2();
-            uint64 blockTimestamp = uint64(block.timestamp);
+            uint256 blockTimestamp = uint256(block.timestamp);
             require(blockTimestamp > periodFinish2, "MUST BE AFTER Previous Rewards");
             
             uint256 maxRewardSupply2 = rewardToken2.balanceOf(address(this)) - totalRewarded2;
@@ -971,7 +967,7 @@ function getRewardBasicBasic(uint choice) public updateReward(msg.sender) {
             require(reward > 0);
             duration = poolLength;  
             rewardPerTokenStored3 = rewardPerToken3();
-            uint64 blockTimestamp = uint64(block.timestamp);
+            uint256 blockTimestamp = uint256(block.timestamp);
             require(blockTimestamp > periodFinish3, "MUST BE AFTER Previous Rewards");
             uint256 maxRewardSupply3 = address(this).balance - totalRewarded3;
 
