@@ -173,7 +173,6 @@ contract GasPump {
 contract ForgeMiningCT{
     function getMiningMinted() public view returns (uint256) {}
     
-    function getMiningReward() public view returns (uint) {}
     }
 
   contract ForgeAuctions is  GasPump, Ownabled
@@ -699,4 +698,3 @@ contract ForgeMiningCT{
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 */
-//Auctions
