@@ -9,7 +9,8 @@
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
-// All distributions happen fairly using Bitcoins model of distribution for over 100+ years, on-chain, decentralized, trustless, ownerless contracts!
+// All distributions happen fairly using Bitcoins model of distribution using reward halvings and difficulty adjustments.  Distribution happens over 100 years!  
+// 100%  on-chain, decentralized, trustless, ownerless contracts*!
 //   The harder it is mined the less tokens that are awarded.
 // Network: Polygon Chain 
 // ChainID = 89
@@ -44,6 +45,7 @@
 //* 1 tokens in LP are burned to create the LP pool.
 //
 // Credits: 0xBitcoin, Vether, Synethix
+//* Except for Staking Rewards additional cryptocurrencies
 
 
 pragma solidity ^0.8.11;
