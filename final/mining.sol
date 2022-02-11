@@ -9,9 +9,12 @@
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
+//   The lower the reward time the less tokens that are awarded.
+//   The higher the reward time the more tokens that are rewarded.
+//
 // All distributions happen fairly using Bitcoins model of distribution using reward halvings and difficulty adjustments.  Distribution happens over 100 years!  
 // 100%  on-chain, decentralized, trustless, ownerless contracts*!
-//   The harder it is mined the less tokens that are awarded.
+//
 // Network: Polygon Chain 
 // ChainID = 89
 //
