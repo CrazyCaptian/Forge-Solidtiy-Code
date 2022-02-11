@@ -283,7 +283,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
 
 
     function NewRewardTime() public returns (bool success){
-	    uint poolLength2 = uint64(AuctionCT.secondsPerDay());
+	    uint64 poolLength2 = uint64(AuctionCT.secondsPerDay());
 	    uint _era = AuctionCT.currentEra();
 	    if(_era<5){
 	    	poolLength = poolLength2*3;
