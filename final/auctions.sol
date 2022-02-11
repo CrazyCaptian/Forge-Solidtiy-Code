@@ -464,7 +464,7 @@ contract ForgeMiningCT{
     }
     
     
-    function WithdrawEzCheck(address _member) public view returns(uint amt) {
+    function Check_Withdraw_Amt(address _member) public view returns(uint amt) {
         uint startingday = ZmapMember_DayClaimedTo[_member];
         uint startingera = ZmapMember_EraClaimedTo[_member];
         if(startingday == 0)
@@ -489,13 +489,13 @@ contract ForgeMiningCT{
              {
                   dd[x-startingday] = x ;
              }
-             totz = totz + WithdrawlsDaysCheck(y, dd, _member);
+             totz = totz + Check_Withdrawls_Days(y, dd, _member);
         }
         return totz;
     }
     
     //Withdraws All days in era for member
-    function WithdrawlsDaysCheck(uint _era, uint[] memory fdays, address _member) public returns (uint check)
+    function Check_Withdrawls_Days(uint _era, uint[] memory fdays, address _member) public view returns (uint check)
     {
     
         uint256 stricttotal = 0;
@@ -503,13 +503,13 @@ contract ForgeMiningCT{
         {
             if (_era < currentEra) {                                                                          // Allow if in previous Era
                 
-                uint memberUnits = mapEraDay_MemberUnits[_era][fdays[x]][_member]
+                uint memberUnits = mapEraDay_MemberUnits[_era][fdays[x]][_member];
                 if (memberUnits!= 0) {
                     stricttotal = stricttotal + getEmissionShare(_era, fdays[x], _member);
                 }
             } else if (_era == currentEra) {                                                                  // Handle if in current Era
                 if (fdays[x] < currentDay) {                                                                      // Allow only if in previous Day
-                    uint memberUnits = mapEraDay_MemberUnits[_era][fdays[x]][_member]
+                    uint memberUnits = mapEraDay_MemberUnits[_era][fdays[x]][_member];
                     if (memberUnits!= 0) {
                         stricttotal = stricttotal + getEmissionShare(_era, fdays[x], _member);
                     }
@@ -517,7 +517,7 @@ contract ForgeMiningCT{
             } 
         }
     
-        return stricttotal;
+        return stricttotal*4;
     }
 
     
