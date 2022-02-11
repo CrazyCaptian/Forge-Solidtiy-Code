@@ -589,7 +589,7 @@ contract ForgeMiningCT{
        
     // Calculate Day emission
     function getDayEmission() public view returns (uint) {
-        uint balance = totalEmited + IERC20(AddressForgeToken).balanceOf(address(this)) - totalAuctioned;                                     // Find remaining balance
+        uint balance = totalEmitted + IERC20(AddressForgeToken).balanceOf(address(this)) - totalAuctioned;                                     // Find remaining balance
         if (balance > emission*4) {                                                           // Balance is sufficient
             return emission;                                                                // Return emission
         } else {                                                                            // Balance has dropped low
