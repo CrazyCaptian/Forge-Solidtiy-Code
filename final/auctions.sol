@@ -282,12 +282,10 @@ contract ForgeMiningCT{
        {
            secondsPerDay = 10;
        }
-       if(secondsPerDay > 60 * 60 * 48 * 2000)
-       {
-           secondsPerDay = 60 * 24 * 60 * 888;
-       }
-           lastMinted = tokensMinted;
+
            
+       lastMinted = tokensMinted;
+
     }
 
 
