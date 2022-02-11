@@ -581,6 +581,13 @@ contract ForgeMiningCT{
     }
     
     
+     function getSecondsPerDay() public view returns (uint256) {
+     
+        return secondsPerDay;                                                             // Return 1.0 from fees
+    }
+       
+       
+    getSecondsPerDay
     // Calculate Day emission
     function getDayEmission() public view returns (uint) {
         uint balance = totalEmited + IERC20(AddressForgeToken).balanceOf(address(this)) - totalAuctioned;                                     // Find remaining balance
