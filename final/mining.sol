@@ -1,11 +1,11 @@
-// Forge - Proof of Work Mining Contract
+// Forge - Contract
 //
 // Distrubtion of Forge Token is as follows:
 // 25% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use 0xBitcoin to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
 // +
 // 25% of Forge Token is distributed as Liquidiy Pool rewards in the ForgeRewards Contract which distributes tokens to users who deposit the SpiritSwap Liquidity Pool tokens into the LPRewards contract.
 // +
-// 50% of Forge Token is distributed using ForgeMining Contract(this Contract) which distributes tokens to users by using GPUs/FPGAs to solve a complicated problem to gain tokens!  Uses this contract
+// 50% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
@@ -16,7 +16,7 @@
 //
 //
 // Name: Forge
-// Symbol: Forge
+// Symbol: Fge
 // Decimals: 18 
 //
 // Total supply: 42,000,001.000000000000000000
