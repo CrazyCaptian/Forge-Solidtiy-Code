@@ -150,9 +150,8 @@ contract StakedTokenWrapper {
 }
 
 contract ForgeAuctionsCT{
-    function getSecondsPerDay() public view returns (uint256) {}
-    
-    function getEra() public view returns (uint256) {}
+    uint256 public secondsPerDay;
+    uint256 public currentEra;
     }
 
 contract ForgeRewards is StakedTokenWrapper, Ownable2 {
@@ -283,9 +282,9 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     }
 
 
-    function NewRewardTime( uint64 _rewardT) external public returns (bool success){
-	    poolLength = AuctionCT.getSecondsPerDay();
-	    _era = AuctionCT.getEra();
+    function NewRewardTime() public returns (bool success){
+	    poolLength = uint64(AuctionCT.secondsPerDay());
+	    uint _era = AuctionCT.currentEra();
 	    if(_era<10){
 	    	poolLength = poolLength*2;
 	    }
