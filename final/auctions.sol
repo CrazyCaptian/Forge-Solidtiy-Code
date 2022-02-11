@@ -196,7 +196,7 @@ contract ForgeMiningCT{
     mapping(address => mapping(address => uint)) private _allowances;
 
     // Public Parameters
-    uint coin; uint public emission;
+    uint coin; uint public emission; uint totalUsed;
     uint public currentEra; uint public currentDay;
     uint public daysPerEra; uint public secondsPerDay;
     uint public nextDayTime;
@@ -547,16 +547,20 @@ contract ForgeMiningCT{
     function _updateEmission() private {
         uint _now = block.timestamp;                                                                    // Find now()
         if (_now > nextDayTime) {                                                          // If time passed the next Day time
+            totalUsed = totalUsed + emission*4;
             if (currentDay >= daysPerEra) {                                                 // If time passed the next Era time
                 currentEra += 1; currentDay = 0;                                            // Increment Era, reset Day
                 emission = getNextEraEmission();                                            // Get correct emission
                 mapEra_Emission[currentEra] = emission;                                     // Map emission to Era
                 emit NewEra(currentEra, emission, totalBurnt); 
             }
-            changeAuctionAmt();
+            changeAuctionAmt(); 
             currentDay += 1;                                                                // Increment Day
             nextDayTime = _now + secondsPerDay;                                             // Set next Day time
-            emission = getDayEmission();                                                    // Check daily Dmission
+         
+            emission = getDayEmission();  
+            
+            // Check daily Dmission
             mapEraDay_EmissionRemaining[currentEra][currentDay] = emission;                 // Map emission to Day
             uint _era = currentEra; uint _day = currentDay-1;
             if(currentDay == 1){ _era = currentEra-1; _day = daysPerEra; }                  // Handle New Era
@@ -579,7 +583,8 @@ contract ForgeMiningCT{
     
     // Calculate Day emission
     function getDayEmission() public view returns (uint) {
-        uint balance = IERC20(AddressForgeToken).balanceOf(address(this));                                            // Find remaining balance
+        uint balance = totalEmited + IERC20(AddressForgeToken).balanceOf(address(this)) - totalUsed;                                     // Find remaining balance
+        
         if (balance > emission*4) {                                                           // Balance is sufficient
             return emission;                                                                // Return emission
         } else {                                                                            // Balance has dropped low
