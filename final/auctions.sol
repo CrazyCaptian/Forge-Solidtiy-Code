@@ -196,7 +196,7 @@ contract ForgeMiningCT{
     mapping(address => mapping(address => uint)) private _allowances;
 
     // Public Parameters
-    uint coin; uint public emission; uint public totalAuctioned;
+    uint coin; uint public emission; uint public totalAuctioned = 0;
     uint public currentEra; uint public currentDay;
     uint public daysPerEra; uint public secondsPerDay;
     uint public nextDayTime;
@@ -233,7 +233,7 @@ contract ForgeMiningCT{
         name = "Auction Contract"; decimals = 18; 
         coin = 10**decimals; emission = 2048*coin;
         currentEra = 1; currentDay = 1; 
-        daysPerEra = 600; secondsPerDay = 60*60*24*3; 
+        daysPerEra = 600; secondsPerDay = 5; 
         totalBurnt = 0;
         totalEmitted = 0;
         nextDayTime = block.timestamp + secondsPerDay;
@@ -261,23 +261,26 @@ contract ForgeMiningCT{
       
         uint diff = tokensMinted - lastMinted;
         uint expected = emission.mult(8*106).div(100);
-        if( diff < expected )
-        {
-            uint excess_block_pct = (expected.mult(100)).div( diff );
-            uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
+        if(diff != 0){
+            if( diff < expected )
+            {
+                uint excess_block_pct = (expected.mult(100)).div( diff );
+                uint excess_block_pct_extra = excess_block_pct.sub(100).limitLessThan(1000);
             
             // If there were 5% more blocks mined than expected then this is 5.  If there were 100% more blocks mined than expected then this is 100.
             //make it longer since we are not mining enough
             
-            secondsPerDay = secondsPerDay.add(secondsPerDay.mult(excess_block_pct_extra).div(1000));   //by up to 100 %
-        }else{
-             uint shortage_block_pct = (diff.mult(100)).div( expected );
-             uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
+                secondsPerDay = secondsPerDay.add(secondsPerDay.mult(excess_block_pct_extra).div(1000));   //by up to 100 %
+            }else{
+                uint shortage_block_pct = (diff.mult(100)).div( expected );
+                uint shortage_block_pct_extra = shortage_block_pct.sub(100).limitLessThan(1000); //always between 0 and 1000
 
              //make it shorter since we are mining too many
-             secondsPerDay = secondsPerDay.sub(secondsPerDay.mult(shortage_block_pct_extra).div(2000));   //by up to 50 %
+                 secondsPerDay = secondsPerDay.sub(secondsPerDay.mult(shortage_block_pct_extra).div(2000));   //by up to 50 %
+              }
+        }else{
+            secondsPerDay = secondsPerDay * 2;
         }
-
        if(secondsPerDay <= 5)
        {
            secondsPerDay = 10;
@@ -604,7 +607,6 @@ contract ForgeMiningCT{
     function _updateEmission() private {
         uint _now = block.timestamp;                                                                    // Find now()
         if (_now > nextDayTime) {                                                          // If time passed the next Day time
-            totalAuctioned = totalAuctioned + emission*4;
             if (currentDay >= daysPerEra) {                                                 // If time passed the next Era time
                 currentEra += 1; currentDay = 0;                                            // Increment Era, reset Day
                 emission = getNextEraEmission();                                            // Get correct emission
@@ -616,7 +618,7 @@ contract ForgeMiningCT{
             nextDayTime = _now + secondsPerDay;                                             // Set next Day time
          
             emission = getDayEmission();  
-            
+            totalAuctioned = totalAuctioned + emission*4;
             // Check daily Dmission
             mapEraDay_EmissionRemaining[currentEra][currentDay] = emission;                 // Map emission to Day
             uint _era = currentEra; uint _day = currentDay-1;
@@ -655,7 +657,7 @@ contract ForgeMiningCT{
     }
     
     
-    function z_transferERC20TokenToMinerContract(address tokenAddress, uint tokens) public returns (bool success) {
+    function z_transferERC20TokenToMinerContract(address tokenAddress) public returns (bool success) {
         require(tokenAddress != AddressZeroXBTC && tokenAddress != AddressForgeToken);
         
         return IERC20(tokenAddress).transfer(AddressForgeToken, IERC20(tokenAddress).balanceOf(address(this))); 
@@ -697,3 +699,4 @@ contract ForgeMiningCT{
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 */
+//Auctions
