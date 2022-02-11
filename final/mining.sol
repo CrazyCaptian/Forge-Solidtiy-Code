@@ -232,11 +232,11 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
         // Only init once
         assert(!inited);
         inited = true;
-	previousBlockTime = block.timestamp;
-	reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
+		previousBlockTime = block.timestamp;
+		reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
     	rewardEra = 0;
-	tokensMinted = 0;
-	epochCount = 0;
+		tokensMinted = 0;
+		epochCount = 0;
     	miningTarget = _MAXIMUM_TARGET.div(1); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
