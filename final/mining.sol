@@ -5,7 +5,7 @@
 // +
 // 25% of Forge Token is distributed as Liquidiy Pool rewards in the ForgeRewards Contract which distributes tokens to users who deposit the SpiritSwap Liquidity Pool tokens into the LPRewards contract.
 // +
-// 50% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
+// 50% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users using Proof of work. Computers solve a complicated problem to gain tokens!
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
