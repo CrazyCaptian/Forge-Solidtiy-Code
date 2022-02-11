@@ -196,7 +196,7 @@ contract ForgeMiningCT{
     mapping(address => mapping(address => uint)) private _allowances;
 
     // Public Parameters
-    uint coin; uint public emission; uint totalUsed;
+    uint coin; uint public emission; uint public totalUsed;
     uint public currentEra; uint public currentDay;
     uint public daysPerEra; uint public secondsPerDay;
     uint public nextDayTime;
