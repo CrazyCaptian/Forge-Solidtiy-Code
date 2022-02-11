@@ -502,10 +502,17 @@ contract ForgeMiningCT{
         for(uint256 x = 0; x < fdays.length; x++)
         {
             if (_era < currentEra) {                                                                          // Allow if in previous Era
-                stricttotal = stricttotal.add( mapEraDay_MemberUnits[_era][fdays[x]][_member] );      // Process Withdrawal
+                
+                uint memberUnits = mapEraDay_MemberUnits[_era][fdays[x]][_member]
+                if (memberUnits!= 0) {
+                    stricttotal = stricttotal + getEmissionShare(_era, fdays[x], _member);
+                }
             } else if (_era == currentEra) {                                                                  // Handle if in current Era
                 if (fdays[x] < currentDay) {                                                                      // Allow only if in previous Day
-                    stricttotal = stricttotal.add( mapEraDay_MemberUnits[_era][fdays[x]][_member] );  // Process Withdrawal
+                    uint memberUnits = mapEraDay_MemberUnits[_era][fdays[x]][_member]
+                    if (memberUnits!= 0) {
+                        stricttotal = stricttotal + getEmissionShare(_era, fdays[x], _member);
+                    }
                 }
             } 
         }
