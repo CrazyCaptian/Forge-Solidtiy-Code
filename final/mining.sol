@@ -1,4 +1,4 @@
-// Forge - Contract
+// Forge Token Contract
 //
 // Distrubtion of Forge Token is as follows:
 // 25% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use 0xBitcoin to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
