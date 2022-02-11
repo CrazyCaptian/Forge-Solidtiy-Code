@@ -1,20 +1,17 @@
-// Forge Token Contract
+// Forge - Contract
 //
 // Distrubtion of Forge Token is as follows:
 // 25% of Forge Token is Auctioned in the ForgeAuctions Contract which distributes tokens to users who use 0xBitcoin to buy tokens in fair price. Each auction lasts ~3 days. Using the Auctions contract
 // +
 // 25% of Forge Token is distributed as Liquidiy Pool rewards in the ForgeRewards Contract which distributes tokens to users who deposit the SpiritSwap Liquidity Pool tokens into the LPRewards contract.
 // +
-// 50% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users using Proof of work. Computers solve a complicated problem to gain tokens!
+// 50% of Forge Token is distributed using Forge Contract(this Contract) which distributes tokens to users by using Proof of work. Computers solve a complicated problem to gain tokens!
 //
 // = 100% Of the Token is distributed to the users! No dev fee or premine!
 //
-//   The lower the reward time the less tokens that are awarded.
-//   The higher the reward time the more tokens that are rewarded.
-//
 // All distributions happen fairly using Bitcoins model of distribution using reward halvings and difficulty adjustments.  Distribution happens over 100 years!  
 // 100%  on-chain, decentralized, trustless, ownerless contracts*!
-//
+//   The harder it is mined the less tokens that are awarded.
 // Network: Polygon Chain 
 // ChainID = 89
 //
@@ -198,14 +195,14 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint public  _MAXIMUM_TARGET = 2**234;
     uint public miningTarget = _MAXIMUM_TARGET.div(200000000000*25);  //1000 million difficulty to start until i enable mining
     
-    bytes32 public challengeNumber;//= blockhash(block.number - 1);   //generate a new one when a new reward is minted
+    bytes32 public challengeNumber = blockhash(block.number - 1);   //generate a new one when a new reward is minted
     uint public rewardEra = 0;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
     uint public reward_amount = 0;
     
     //Stuff for Functions
     uint oldecount = 0;
-    uint public previousBlockTime;// = block.timestamp;
+    uint public previousBlockTime  = block.timestamp;
     uint oneEthUnit =    1000000000000000000;
     uint one8unit   =              100000000;
     uint public Token2Per=           1000000;
@@ -235,11 +232,11 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
         // Only init once
         assert(!inited);
         inited = true;
-		previousBlockTime = block.timestamp;
-		reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
+	previousBlockTime = block.timestamp;
+	reward_amount = (100 * 10**uint(decimals) ).div( 2**rewardEra );
     	rewardEra = 0;
-		tokensMinted = 0;
-		epochCount = 0;
+	tokensMinted = 0;
+	epochCount = 0;
     	miningTarget = _MAXIMUM_TARGET.div(1); //5000000 = 31gh/s @ 7 min for FPGA mining
         latestDifficultyPeriodStarted2 = block.timestamp;
     	_startNewMiningEpoch();
