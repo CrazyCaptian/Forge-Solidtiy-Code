@@ -149,6 +149,11 @@ contract StakedTokenWrapper {
     }
 }
 
+contract ForgeAuctionsCT{
+    function getSecondsPerDay() public view returns (uint256) {}
+    
+    }
+
 contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     bool activated6 = false;
     bool activated5 = false;
@@ -203,6 +208,7 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     uint256 public rewardPerTokenStoredExtraExtra2;
     uint256 public rewardPerTokenStoredExtraExtra3;
 	
+	ForgeAuctionsCT public AuctionCT;
     struct UserRewards {
         uint256 userRewardPerTokenPaid;
         uint256 rewards;
@@ -268,16 +274,16 @@ contract ForgeRewards is StakedTokenWrapper, Ownable2 {
     event RewardAdded7(uint256 rewards7);
     event RewardPaidExtraExtra3(address indexed user, uint256 rewardsExtraExtra3);
 
-    constructor(IERC20 _rewardForge, IERC20 _LP, IERC20 _reward0xBTC) {
+    constructor(IERC20 _rewardForge, IERC20 _LP, IERC20 _reward0xBTC, ForgeAuctionsCT AuctionAddress) {
         rewardToken = _rewardForge;
         stakedToken = _LP;
         rewardToken2 = _reward0xBTC;
+	AuctionCT = AuctionAddress;
     }
 
 
-    function Z_NewRewardTime( uint64 _rewardT) external onlyOwner returns (bool success){
-    	require( _rewardT >= 60*60*24*7 && _rewardT <= 60*60*24*1050, "Reward must stay within boundaries");
-	    poolLength = _rewardT;
+    function NewRewardTime( uint64 _rewardT) external public returns (bool success){
+	    poolLength = AuctionCT.getSecondsPerDay();
 	}
 
 
