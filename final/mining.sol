@@ -166,7 +166,7 @@ abstract contract ApproveAndCallFallBack {
 
 contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 	uint constant public targetTime = 60 * 48;
-    uint public multipler = 1;
+    uint public multipler = 0;
 // SUPPORTING CONTRACTS
     address public AddressAuction;
     address public AddressLPReward;
@@ -778,4 +778,3 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 */
-//Proof of Work
