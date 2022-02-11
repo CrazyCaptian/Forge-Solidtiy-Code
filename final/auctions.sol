@@ -196,7 +196,7 @@ contract ForgeMiningCT{
     mapping(address => mapping(address => uint)) private _allowances;
 
     // Public Parameters
-    uint coin; uint public emission; uint public totalUsed;
+    uint coin; uint public emission; uint public totalAuctioned;
     uint public currentEra; uint public currentDay;
     uint public daysPerEra; uint public secondsPerDay;
     uint public nextDayTime;
@@ -547,7 +547,7 @@ contract ForgeMiningCT{
     function _updateEmission() private {
         uint _now = block.timestamp;                                                                    // Find now()
         if (_now > nextDayTime) {                                                          // If time passed the next Day time
-            totalUsed = totalUsed + emission*4;
+            totalAuctioned = totalAuctioned + emission*4;
             if (currentDay >= daysPerEra) {                                                 // If time passed the next Era time
                 currentEra += 1; currentDay = 0;                                            // Increment Era, reset Day
                 emission = getNextEraEmission();                                            // Get correct emission
@@ -583,8 +583,7 @@ contract ForgeMiningCT{
     
     // Calculate Day emission
     function getDayEmission() public view returns (uint) {
-        uint balance = totalEmited + IERC20(AddressForgeToken).balanceOf(address(this)) - totalUsed;                                     // Find remaining balance
-        
+        uint balance = totalEmited + IERC20(AddressForgeToken).balanceOf(address(this)) - totalAuctioned;                                     // Find remaining balance
         if (balance > emission*4) {                                                           // Balance is sufficient
             return emission;                                                                // Return emission
         } else {                                                                            // Balance has dropped low
