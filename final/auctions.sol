@@ -464,6 +464,56 @@ contract ForgeMiningCT{
     }
     
     
+    function WithdrawEzCheck(address _member) public view returns(uint amt) {
+        uint startingday = ZmapMember_DayClaimedTo[_member];
+        uint startingera = ZmapMember_EraClaimedTo[_member];
+        if(startingday == 0)
+        {
+            startingday = 1;
+        }
+        if(startingera == 0)
+        {
+            startingera = 1;
+        }
+        uint maxDay=1;
+        uint totz = 0;
+        for(uint y=startingera; y <= currentEra; y++){
+            if(y != currentEra){
+                maxDay = daysPerEra;
+             }else{
+               maxDay = currentDay - 1;
+             }
+          
+             uint[] memory dd = new uint[](maxDay-startingday+1); 
+             for(uint x=startingday; x<= maxDay; x++)
+             {
+                  dd[x-startingday] = x ;
+             }
+             totz = totz + WithdrawlsDaysCheck(y, dd, _member);
+        }
+        return totz;
+    }
+    
+    //Withdraws All days in era for member
+    function WithdrawlsDaysCheck(uint _era, uint[] memory fdays, address _member) public returns (uint check)
+    {
+    
+        uint256 stricttotal = 0;
+        for(uint256 x = 0; x < fdays.length; x++)
+        {
+            if (_era < currentEra) {                                                                          // Allow if in previous Era
+                stricttotal = stricttotal.add( mapEraDay_MemberUnits[_era][fdays[x]][_member] );      // Process Withdrawal
+            } else if (_era == currentEra) {                                                                  // Handle if in current Era
+                if (fdays[x] < currentDay) {                                                                      // Allow only if in previous Day
+                    stricttotal = stricttotal.add( mapEraDay_MemberUnits[_era][fdays[x]][_member] );  // Process Withdrawal
+                }
+            } 
+        }
+    
+        return stricttotal;
+    }
+
+    
     //Withdraws All days in era for member
     function WithdrawlsDays(uint _era, uint[] memory fdays, address _member) public returns (bool success)
     {
