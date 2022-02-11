@@ -195,14 +195,14 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint public  _MAXIMUM_TARGET = 2**234;
     uint public miningTarget = _MAXIMUM_TARGET.div(200000000000*25);  //1000 million difficulty to start until i enable mining
     
-    bytes32 public challengeNumber= blockhash(block.number - 1);   //generate a new one when a new reward is minted
+    bytes32 public challengeNumber;//= blockhash(block.number - 1);   //generate a new one when a new reward is minted
     uint public rewardEra = 0;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
     uint public reward_amount = 0;
     
     //Stuff for Functions
     uint oldecount = 0;
-    uint public previousBlockTime = block.timestamp;
+    uint public previousBlockTime;// = block.timestamp;
     uint oneEthUnit =    1000000000000000000;
     uint one8unit   =              100000000;
     uint public Token2Per=           1000000;
@@ -220,6 +220,13 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
     uint256 lastrun = block.timestamp;
     uint public latestDifficultyPeriodStarted = block.number;
     bool inited = false;
+    
+    // mint 1 token to setup LPs
+	    constructor() public {
+    balances[msg.sender] = 1000000000000000000;
+    emit Transfer(address(0), msg.sender, 1000000000000000000);
+	}
+
     function zinit(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
         uint x = 21000000000000000000000000; 
         // Only init once
@@ -244,10 +251,7 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 	
         oldecount = epochCount;
 	
-        // mint 1 token to setup LPs
-        balances[msg.sender] = 1000000000000000000;
-	
-        emit Transfer(address(0), msg.sender, 1000000000000000000);
+		setOwner(address(0));
      
     }
 
@@ -256,14 +260,6 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 	///
 	// Managment
 	///
-
-	function zinit2(address AuctionAddress2, address LPGuild2, address _ZeroXBTCAddress) public onlyOwner{
-			AddressAuction = AuctionAddress2;
-			AddressLPReward = payable(LPGuild2);
-			AddressZeroXBTC = _ZeroXBTCAddress;
-			setOwner(address(0));
-		}
-
 
 	function ARewardSender() public {
 		//runs every _BLOCKS_PER_READJUSTMENT / 4
@@ -277,17 +273,17 @@ contract Forge is Ownable, IERC20, ApproveAndCallFallBack {
 		uint256 x = (runsperepoch * 888).divRound(targetTime);
 		uint256 ratio = x * 100 / 888;
 		uint256 totalOwed;
+		
 		 if(ratio < 200){
 			totalOwed = (61001200 * (x ** 2 )).div(888**2) + (40861500 * x).div(888) ;
 		 }else {
 			totalOwed = (340000000);
 		} 
-		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)) // at least enough blocks to rerun this function for both LPRewards and Users
-		{
+
+		if(IERC20(AddressZeroXBTC).balanceOf(address(this)) > (30 * 2 * (Token2Per * _BLOCKS_PER_READJUSTMENT)/4)){  // at least enough blocks to rerun this function for both LPRewards and Users
 			IERC20(AddressZeroXBTC).transfer(AddressLPReward, ((epochsPast) * totalOwed * Token2Per * give0xBTC).div(2 * 100000000));
 			give0xBTC = 1 * give;
-		}
-		else{
+		}else{
 			give0xBTC = 0;
 		}
 		oldecount = epochCount; //actually epoch
